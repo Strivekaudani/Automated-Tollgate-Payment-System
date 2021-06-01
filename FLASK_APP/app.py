@@ -9,7 +9,9 @@ from passlib.hash import sha256_crypt
 engine = create_engine("mysql+pymysql://root:july1998@localhost/tollgate")
 db = scoped_session(sessionmaker(bind=engine))
 
-socket.getaddrinfo('localhost', 8080)
+client_socket = socket.socket()
+client_socket.connect(("192.168.43.78", 1234))
+
 
 app = Flask(__name__)
 
@@ -183,3 +185,12 @@ def password():
 if __name__ == "__main__":
     app.run(debug = True)
     app.secret_key = "autogateapp"
+
+s = None
+while s is None:
+    s = input("Enter a command: ")
+    client_socket.sendall(s.encode())
+
+    if s == "exit":
+        break
+client_socket.close()
