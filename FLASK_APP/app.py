@@ -180,7 +180,7 @@ def password():
 
     return render_template("password.html", e_mail = e_mail)
 
-@app.route("/scan")
+@app.route("/scan", methods = ["GET", "POST"])
 def scan():
 
     camera = PiCamera()
@@ -204,8 +204,8 @@ def scan():
     		break
 
     cv2.destroyAllWindows()
-    
-    return render_template("scan.html")
+
+    return render_template("scan.html", text = text)
 
 
 
