@@ -1,4 +1,8 @@
 import requests
+import cv2
+import pytesseract
+from picamera.array import PiRGBArray
+from picamera import PiCamera
 from flask import Flask, render_template, request, session, logging, url_for, redirect, flash
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -175,6 +179,33 @@ def password():
             return render_template("error.html", messagess = messagess)
 
     return render_template("password.html", e_mail = e_mail)
+
+@app.route("/scan")
+def scan():
+
+    camera = PiCamera()
+    camera.resolution = (640, 480)
+    camera.framerate = 30
+
+    rawCapture = PiRGBArray(camera, size=(640, 480))
+
+    for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
+    	image = frame.array
+    	cv2.imshow("Frame", image)
+    	key = cv2.waitKey(1) & 0xFF
+
+    	rawCapture.truncate(0)
+
+    	if key == ord("s"):
+    		text = pytesseract.image_to_string(image)
+    		print(text)
+    		cv2.imshow("Frame", image)
+    		cv2.waitKey(0)
+    		break
+
+    cv2.destroyAllWindows()
+    
+    return render_template("scan.html")
 
 
 
