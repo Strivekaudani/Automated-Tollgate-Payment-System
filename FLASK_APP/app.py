@@ -127,7 +127,7 @@ def welcome():
             return render_template("error.html", messagess = messagess)
         except Exception as e:
             messagess = "Sorry, something went wrong. Please try again."
-            return render_template("error.html", messagess = e)
+            return render_template("error.html", messagess = messagess)
 
     return render_template("welcome.html", nm = nm, funds = funds, license = license)
 
@@ -218,12 +218,15 @@ def scan():
 
             cv2.destroyAllWindows()
 
-            email = db.execute("SELECT email FROM users WHERE one = :one, OR two = :two, OR three = :three", {"one":text, "two":text, "three":text}).fetchone()
-            balance = db.execute("SELECT balance FROM money WHERE email = :email" , {"email":email}).fetchone()
+            email_db = db.execute("SELECT owner FROM cars WHERE regnum = :regnum", {"regnum":text}).fetchone()
+            email = email_db[0]
+            balance_db = db.execute("SELECT funds FROM users WHERE email = :email" , {"email":email}).fetchone()
+            balance = balance_db[0]
 
             if balance is not None:
                 balance = balance - 100
-                db.execute("UPDATE money SET balance = :balance WHERE email = :email" , {"balance":balance, "email":email})
+                db.execute("UPDATE users SET funds = :funds WHERE email = :email" , {"funds":balance, "email":email})
+                return redirect(url_for('scan'))
 
         except Exception as e:
             messagess = "Sorry, something went wrong. Please try again."
