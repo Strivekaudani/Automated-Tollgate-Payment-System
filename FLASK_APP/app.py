@@ -9,7 +9,7 @@ from flask_mail import Mail, Message
 
 from passlib.hash import sha256_crypt
 
-engine = create_engine("sqlite:///clayton/FLASK_APP/data.sqlite")
+engine = create_engine("sqlite:///database.sqlite")
 db = scoped_session(sessionmaker(bind=engine))
 
 app = Flask(__name__)
@@ -57,8 +57,8 @@ def signup():
 
             if password == confirm:
                 if emaill is None:
-                    db.execute("INSERT INTO users(name, surname, email, one, two, three, hpassword)VALUES(:name, :surname, :email, :one, :two, :three, :hpassword)",
-                                {"name":name, "surname":surname, "email":email, "one":number_plate_one, "two" : number_plate_two, "three" : number_plate_three, "hpassword":secure_password})
+                    db.execute("INSERT INTO users(name, surname, email, hpassword)VALUES(:name, :surname, :email, :hpassword)",
+                                {"name":name, "surname":surname, "email":email, "hpassword":secure_password})
                     db.execute("INSERT INTO passwords(email, question, answer, password)VALUES(:email, :question, :answer, :password)",
                                 {"email":email, "password":password, "question":security_question, "answer":security_answer})
 
