@@ -36,6 +36,8 @@ def signup():
             number_plate_one = request.form.get("number_plate_one")
             number_plate_two = request.form.get("number_plate_two")
             number_plate_three = request.form.get("number_plate_three")
+            number_plate_four = request.form.get("number_plate_four")
+            carlicense = request.form.get("carlicense")
             password = request.form.get("password")
             confirm = request.form.get("confirm")
             security_question = request.form.get("question")
@@ -49,6 +51,8 @@ def signup():
             number_plate_three = number_plate_three.capitalize()
             security_answer = security_answer.capitalize()
 
+            car_list = [number_plate_one, number_plate_two, number_plate_three, number_plate_four]
+
             emaill = db.execute("SELECT email FROM users WHERE email = :email", {"email":email}).fetchone()
 
             if password == confirm:
@@ -57,6 +61,11 @@ def signup():
                                 {"name":name, "surname":surname, "email":email, "one":number_plate_one, "two" : number_plate_two, "three" : number_plate_three, "hpassword":secure_password})
                     db.execute("INSERT INTO passwords(email, question, answer, password)VALUES(:email, :question, :answer, :password)",
                                 {"email":email, "password":password, "question":security_question, "answer":security_answer})
+
+                    for regnum in car_list:
+                        db.execute("INSERT INTO cars(regnum, carlicense, owner)VALUES(:regnum, :carlicense, :owner)",
+                                    {"regnum":regnum, "carlicense":carlicense, "owner":email})
+
                     db.commit()
 
                     msg = Message('Welcome to AutoGate', sender = 'autogateapp@gmail.com', recipients = [email])
