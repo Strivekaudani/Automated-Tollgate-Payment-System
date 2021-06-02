@@ -1,4 +1,3 @@
-import requests
 import cv2
 import pytesseract
 from picamera.array import PiRGBArray
@@ -10,7 +9,7 @@ from flask_mail import Mail, Message
 
 from passlib.hash import sha256_crypt
 
-engine = create_engine("mysql+pymysql://root:july1998@localhost/tollgate")
+engine = create_engine"(sqlite:///clayton/FLASK_APP/data.sqlite")
 db = scoped_session(sessionmaker(bind=engine))
 
 app = Flask(__name__)
@@ -116,7 +115,7 @@ def welcome():
             messagess = "Sorry, something went wrong. Please try again."
             return render_template("error.html", messagess = e)
 
-    return render_template("welcome.html", weather = weather, nm = nm)
+    return render_template("welcome.html", nm = nm)
 
 
 @app.route("/forgot")
