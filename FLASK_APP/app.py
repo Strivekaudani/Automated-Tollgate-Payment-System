@@ -111,9 +111,13 @@ def welcome():
                 for pass_data in password_data:
                     if sha256_crypt.verify(passwords, pass_data):
                         name_db = db.execute("SELECT name FROM users WHERE email = :email", {"email":emails}).fetchone()
+                        funds_db = db.execute("SELECT funds FROM users WHERE email = :email", {"email":emails}).fetchone()
+                        license_db = db.execute("SELECT carlicense FROM cars WHERE owner = :owner", {"owner":emails}).fetchone()
                         nm = name_db[0]
+                        funds = funds_db[0]
+                        license = license_db[0]
 
-                        return render_template("welcome.html", nm = nm)
+                        return render_template("welcome.html", nm = nm, funds = funds, license = license)
                     else:
                          messagess = "Incorrect Password"
                          return render_template("error.html", messagess = messagess)
