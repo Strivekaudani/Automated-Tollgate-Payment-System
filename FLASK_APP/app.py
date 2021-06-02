@@ -9,7 +9,7 @@ from flask_mail import Mail, Message
 
 from passlib.hash import sha256_crypt
 
-engine = create_engine"(sqlite:///clayton/FLASK_APP/data.sqlite")
+engine = create_engine("sqlite:///clayton/FLASK_APP/data.sqlite")
 db = scoped_session(sessionmaker(bind=engine))
 
 app = Flask(__name__)
