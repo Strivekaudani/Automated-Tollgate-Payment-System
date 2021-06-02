@@ -85,7 +85,7 @@ def signup():
             return render_template("error.html", messagess = messagess)
         except Exception as e:
             messagess = "Sorry, something went wrong. Please try again."
-            return render_template("error.html", messagess = messagess)
+            return render_template("error.html", messagess = e)
 
     return render_template("signup.html")
 
