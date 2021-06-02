@@ -129,7 +129,7 @@ def welcome():
             messagess = "Sorry, something went wrong. Please try again."
             return render_template("error.html", messagess = e)
 
-    return render_template("welcome.html", nm = nm)
+    return render_template("welcome.html", nm = nm, funds = funds, license = license)
 
 
 @app.route("/forgot")
