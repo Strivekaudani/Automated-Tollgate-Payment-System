@@ -182,28 +182,39 @@ def password():
 
 @app.route("/scan", methods = ["GET", "POST"])
 def scan():
+        try:
+            camera = PiCamera()
+            camera.resolution = (640, 480)
+            camera.framerate = 30
 
-    camera = PiCamera()
-    camera.resolution = (640, 480)
-    camera.framerate = 30
+            rawCapture = PiRGBArray(camera, size=(640, 480))
 
-    rawCapture = PiRGBArray(camera, size=(640, 480))
+            for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
+            	image = frame.array
+            	cv2.imshow("Frame", image)
+            	key = cv2.waitKey(1) & 0xFF
 
-    for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
-    	image = frame.array
-    	cv2.imshow("Frame", image)
-    	key = cv2.waitKey(1) & 0xFF
+            	rawCapture.truncate(0)
 
-    	rawCapture.truncate(0)
+            	if key == ord("s"):
+            		text = pytesseract.image_to_string(image)
+            		print(text)
+            		cv2.imshow("Frame", image)
+            		cv2.waitKey(0)
+            		break
 
-    	if key == ord("s"):
-    		text = pytesseract.image_to_string(image)
-    		print(text)
-    		cv2.imshow("Frame", image)
-    		cv2.waitKey(0)
-    		break
+            cv2.destroyAllWindows()
 
-    cv2.destroyAllWindows()
+            email = db.execute("SELECT email FROM users WHERE one = :one, OR two = :two, OR three = :three", {"one":text, "two":text, "three":text}).fetchone()
+            balance = db.execute("SELECT balance FROM money WHERE email = :email" , {"email":email}).fetchone()
+
+            if balance is not None:
+                balance = balance - 100
+                db.execute("UPDATE money SET balance = :balance WHERE email = :email" , {"balance":balance, "email":email})
+
+        except Exception as e:
+            messagess = "Sorry, something went wrong. Please try again."
+            return render_template("error.html", messagess = messagess)
 
     return render_template("scan.html", text = text)
 

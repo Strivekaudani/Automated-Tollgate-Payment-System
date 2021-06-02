@@ -75,7 +75,48 @@
 
     {% if nm == admin %}
       {% block content %}
-
+        <section class="ftco-section ftco-no-pt ftco-no-pb">
+          <div class="container-fluid px-0">
+            <div class="row no-gutters">
+              <div class="col-md text-center d-flex align-items-stretch">
+                <div class="services-wrap d-flex align-items-center img">
+                  <div class="text-about py-5 px-4">
+                    <h1 class="logo">
+                      Pending Confirmations
+                    </h1>
+                    <h2>Confirm Payments </h2>
+                    <div class="container" style="width: 100%; height: 500px; display: flex; justify-content: center;">
+                      <div class="output-container" style="width: 90%; height: 450px;">
+                        <table class="table">
+                          <thead>
+                            <tr>
+                              <th scope="col">Email</th>
+                              <th scope="col">Number Plate</th>
+                              <th scope="col">Amount</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <th scope="row">25/07/2020</th>
+                              <td>07:00</td>
+                              <td>Siren was turned on</td>
+                            </tr>
+                            <tr>
+                            <th scope="row">25/07/2020</th>
+                            <td>07:00</td>
+                            <td>Pump was turned on</td>
+                          </tr>
+                          <tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {% endblock content %}
     {% else %}
