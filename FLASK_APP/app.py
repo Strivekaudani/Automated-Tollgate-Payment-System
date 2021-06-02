@@ -50,6 +50,7 @@ def signup():
             number_plate_two = number_plate_two.capitalize()
             number_plate_three = number_plate_three.capitalize()
             security_answer = security_answer.capitalize()
+            funds = 0
 
             car_list = [number_plate_one, number_plate_two, number_plate_three, number_plate_four]
 
@@ -57,8 +58,8 @@ def signup():
 
             if password == confirm:
                 if emaill is None:
-                    db.execute("INSERT INTO users(name, surname, email, hpassword)VALUES(:name, :surname, :email, :hpassword)",
-                                {"name":name, "surname":surname, "email":email, "hpassword":secure_password})
+                    db.execute("INSERT INTO users(name, surname, email, funds, hpassword)VALUES(:name, :surname, :email, :funds, :hpassword)",
+                                {"name":name, "surname":surname, "email":email, "funds":funds, "hpassword":secure_password})
                     db.execute("INSERT INTO passwords(email, question, answer, password)VALUES(:email, :question, :answer, :password)",
                                 {"email":email, "password":password, "question":security_question, "answer":security_answer})
 
