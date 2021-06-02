@@ -215,7 +215,7 @@ def scan():
             messagess = "Sorry, something went wrong. Please try again."
             return render_template("error.html", messagess = messagess)
 
-    return render_template("scan.html", text = text)
+        return render_template("scan.html", text = text)
 
 
 
