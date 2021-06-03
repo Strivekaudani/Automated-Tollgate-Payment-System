@@ -8,9 +8,7 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from flask_mail import Mail, Message
 
 from passlib.hash import sha256_crypt
-
-
-camera = PiCamera()
+from camera import Camera
 
 engine = create_engine("sqlite:///database.sqlite")
 db = scoped_session(sessionmaker(bind=engine))
@@ -246,7 +244,7 @@ def gen(camera):
 
 @app.route('/video_feed')
 def video_feed():
-    return Response(gen(camera),
+    return Response(gen(Camera()),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
 @app.route('/camera-test')
