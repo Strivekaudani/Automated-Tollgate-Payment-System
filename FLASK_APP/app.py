@@ -196,44 +196,47 @@ def password():
 
 @app.route("/scan", methods = ["GET", "POST"])
 def scan():
-        try:
-            camera = PiCamera()
-            camera.resolution = (640, 480)
-            camera.framerate = 30
 
-            rawCapture = PiRGBArray(camera, size=(640, 480))
+        return render("scan.html");
 
-            for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
-            	image = frame.array
-            	cv2.imshow("Frame", image)
-            	key = cv2.waitKey(1) & 0xFF
+        # try:
+        #     camera = PiCamera()
+        #     camera.resolution = (640, 480)
+        #     camera.framerate = 30
 
-            	rawCapture.truncate(0)
+        #     rawCapture = PiRGBArray(camera, size=(640, 480))
 
-            	if key == ord("s"):
-            		text = pytesseract.image_to_string(image)
-            		print(text)
-            		cv2.imshow("Frame", image)
-            		cv2.waitKey(0)
-            		break
+        #     for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
+        #     	image = frame.array
+        #     	cv2.imshow("Frame", image)
+        #     	key = cv2.waitKey(1) & 0xFF
 
-            cv2.destroyAllWindows()
+        #     	rawCapture.truncate(0)
 
-            email_db = db.execute("SELECT owner FROM cars WHERE regnum = :regnum", {"regnum":text}).fetchone()
-            email = email_db[0]
-            balance_db = db.execute("SELECT funds FROM users WHERE email = :email" , {"email":email}).fetchone()
-            balance = balance_db[0]
+        #     	if key == ord("s"):
+        #     		text = pytesseract.image_to_string(image)
+        #     		print(text)
+        #     		cv2.imshow("Frame", image)
+        #     		cv2.waitKey(0)
+        #     		break
 
-            if balance is not None:
-                balance = balance - 100
-                db.execute("UPDATE users SET funds = :funds WHERE email = :email" , {"funds":balance, "email":email})
-                return redirect(url_for('scan'))
+        #     cv2.destroyAllWindows()
 
-        except Exception as e:
-            messagess = "Sorry, something went wrong. Please try again."
-            return render_template("error.html", messagess = messagess)
+        #     email_db = db.execute("SELECT owner FROM cars WHERE regnum = :regnum", {"regnum":text}).fetchone()
+        #     email = email_db[0]
+        #     balance_db = db.execute("SELECT funds FROM users WHERE email = :email" , {"email":email}).fetchone()
+        #     balance = balance_db[0]
 
-        return render_template("scan.html", text = text)
+        #     if balance is not None:
+        #         balance = balance - 100
+        #         db.execute("UPDATE users SET funds = :funds WHERE email = :email" , {"funds":balance, "email":email})
+        #         return redirect(url_for('scan'))
+
+        # except Exception as e:
+        #     messagess = "Sorry, something went wrong. Please try again."
+        #     return render_template("error.html", messagess = messagess)
+
+        # return render_template("scan.html", text = text)
 
 
 def gen(camera):
@@ -246,10 +249,6 @@ def gen(camera):
 def video_feed():
     return Response(gen(Camera()),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
-
-@app.route('/camera-test')
-def camera_test():
-    return render_template('camera-test.html')
 
 
 
