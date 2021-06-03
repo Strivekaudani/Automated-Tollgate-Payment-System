@@ -11,7 +11,6 @@ from passlib.hash import sha256_crypt
 
 from camera import Camera
 
-ekisi = 0
 
 engine = create_engine("sqlite:///database.sqlite")
 db = scoped_session(sessionmaker(bind=engine))
@@ -252,11 +251,11 @@ def video_feed():
 
 @app.route('/camera-test')
 def camera_test():
-    ekisi = ekisi + 1
-    print("")
-    print("ekisi:")
-    print(ekisi)
-    print("")
+    # ekisi = ekisi + 1
+    # print("")
+    # print("ekisi:")
+    # print(ekisi)
+    # print("")
     return render_template('camera-test.html')
 
 
