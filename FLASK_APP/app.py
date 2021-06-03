@@ -197,7 +197,7 @@ def password():
 @app.route("/scan", methods = ["GET", "POST"])
 def scan():
 
-        return render("scan.html");
+        return render_template("scan.html");
 
         # try:
         #     camera = PiCamera()
