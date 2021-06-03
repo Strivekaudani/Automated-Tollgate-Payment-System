@@ -2,12 +2,16 @@ import cv2
 import pytesseract
 from picamera.array import PiRGBArray
 from picamera import PiCamera
-from flask import Flask, render_template, request, session, logging, url_for, redirect, flash
+from flask import Flask, render_template, request, session, logging, url_for, redirect, flash, Response
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from flask_mail import Mail, Message
 
 from passlib.hash import sha256_crypt
+
+from camera import Camera
+
+ekisi = 0
 
 engine = create_engine("sqlite:///database.sqlite")
 db = scoped_session(sessionmaker(bind=engine))
@@ -233,6 +237,27 @@ def scan():
             return render_template("error.html", messagess = messagess)
 
         return render_template("scan.html", text = text)
+
+
+def gen(camera):
+    while True:
+        frame = camera.get_frame()
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+
+@app.route('/video_feed')
+def video_feed():
+    return Response(gen(Camera()),
+                    mimetype='multipart/x-mixed-replace; boundary=frame')
+
+@app.route('/camera-test')
+def camera_test():
+    ekisi = ekisi + 1
+    print("")
+    print("ekisi:")
+    print(ekisi)
+    print("")
+    return render_template('camera-test.html')
 
 
 
