@@ -9,8 +9,8 @@ from flask_mail import Mail, Message
 
 from passlib.hash import sha256_crypt
 
-from camera import Camera
 
+camera = PiCamera()
 
 engine = create_engine("sqlite:///database.sqlite")
 db = scoped_session(sessionmaker(bind=engine))
@@ -246,16 +246,11 @@ def gen(camera):
 
 @app.route('/video_feed')
 def video_feed():
-    return Response(gen(Camera()),
+    return Response(gen(camera),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
 @app.route('/camera-test')
 def camera_test():
-    # ekisi = ekisi + 1
-    # print("")
-    # print("ekisi:")
-    # print(ekisi)
-    # print("")
     return render_template('camera-test.html')
 
 
