@@ -23,73 +23,21 @@ app.config['MAIL_PASSWORD'] = 'autogate123'
 
 mail = Mail(app)
 
+
+# route handlers
+from create_account import create_account
+
 @app.route("/")
 def index():
     return render_template("index.html")
 
 @app.route("/signup", methods = ["POST", "GET"])
 def signup():
-    if request.method == "POST":
-        try:
-            name = request.form.get("name")
-            surname = request.form.get("surname")
-            email = request.form.get("email")
-            number_plate_one = request.form.get("number_plate_one")
-            number_plate_two = request.form.get("number_plate_two")
-            number_plate_three = request.form.get("number_plate_three")
-            number_plate_four = request.form.get("number_plate_four")
-            carlicense = request.form.get("carlicense")
-            password = request.form.get("password")
-            confirm = request.form.get("confirm")
-            security_question = request.form.get("question")
-            security_answer = request.form.get("answer")
-            secure_password = sha256_crypt.encrypt(str(password))
 
-            name = name.capitalize()
-            surname = surname.capitalize()
-            number_plate_one = number_plate_one.capitalize()
-            number_plate_two = number_plate_two.capitalize()
-            number_plate_three = number_plate_three.capitalize()
-            security_answer = security_answer.capitalize()
-            funds = 0
-
-            car_list = [number_plate_one, number_plate_two, number_plate_three, number_plate_four]
-
-            emaill = db.execute("SELECT email FROM users WHERE email = :email", {"email":email}).fetchone()
-
-            if password == confirm:
-                if emaill is None:
-                    db.execute("INSERT INTO users(name, surname, email, funds, hpassword)VALUES(:name, :surname, :email, :funds, :hpassword)",
-                                {"name":name, "surname":surname, "email":email, "funds":funds, "hpassword":secure_password})
-                    db.execute("INSERT INTO passwords(email, question, answer, password)VALUES(:email, :question, :answer, :password)",
-                                {"email":email, "password":password, "question":security_question, "answer":security_answer})
-
-                    for regnum in car_list:
-                        db.execute("INSERT INTO cars(regnum, carlicense, owner)VALUES(:regnum, :carlicense, :owner)",
-                                    {"regnum":regnum, "carlicense":carlicense, "owner":email})
-
-                    db.commit()
-
-                    msg = Message('Welcome to AutoGate', sender = 'autogateapp@gmail.com', recipients = [email])
-                    msg.body = "Hie " + name + " " + surname + "! \n\n Your AutoGate account has been successfully created. Welcome to Automated Tollgate Payment System. \n\nRegards, \n\nThe AutoGate Team"
-                    mail.send(msg)
-
-                else:
-                    messagess = "Email address already exists"
-                    return render_template("error.html", messagess = messagess)
-                return redirect(url_for('signin'))
-            else:
-                messagess = "Password does not match"
-                return render_template("error.html", messagess = messagess)
-
-        except ConnectionError as e:
-            messagess = "Connection Error. Check your internet connection and try again."
-            return render_template("error.html", messagess = messagess)
-        except Exception as e:
-            messagess = "Sorry, something went wrong. Please try again."
-            return render_template("error.html", messagess = e)
-
-    return render_template("signup.html")
+    if (request.method == 'POST'):
+        return create_account(request)
+    else:
+        return render_template('signup.html')
 
 
 @app.route("/signin")
@@ -130,7 +78,7 @@ def welcome():
             messagess = "Sorry, something went wrong. Please try again."
             return render_template("error.html", messagess = messagess)
 
-    return render_template("welcome.html", nm = nm, funds = funds, license = license)
+    return render_template("welcome.html", nm = 'EN EM', funds = 90, license = "90")
 
 
 @app.route("/forgot")
@@ -253,5 +201,5 @@ def video_feed():
 
 
 if __name__ == "__main__":
-    app.run(debug = True)
+    app.run(debug = True, use_reloader=True, host='0.0.0.0')
     app.secret_key = "autogateapp"

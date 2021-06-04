@@ -1,18 +1,31 @@
-from flask import Flask, request
-from sqlalchemy import create_engine
-from sqlalchemy.orm import scoped_session, sessionmaker
 
-engine = create_engine("sqlite:///clayton/FLASK_APP/data.sqlite")
-db = scoped_session(sessionmaker(bind=engine))
+from db import db
 
-app = Flask(__name__)
+# reading sql file
+f = open("tables.sql", 'r');
+contents = f.read();
 
-@app.route("/")
-def index():
+statements = contents.split(';');
 
-    return "<h1> Successfully Created </h1>"
+# executing sql statements
+for statement in statements:
+
+	statement = statement.strip();
+
+	if (statement == ''):
+		continue
+
+	statement = statement.replace('\r\n', ' ')
+	statement = statement.replace('\n\r', ' ')
+	statement = statement.replace('\n', ' ')
+	statement = statement.replace('\r', ' ')
+
+	try:
+		db.execute(statement);
+	except Exception as e:
+		print(statement);
+		print (str(e))
 
 
-if __name__ == "__main__":
-    app.run(debug = True)
-    app.secret_key = "autogateapp"
+
+
