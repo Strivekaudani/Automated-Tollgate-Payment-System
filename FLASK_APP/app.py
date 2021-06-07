@@ -1,17 +1,18 @@
-import cv2
-import pytesseract
-from picamera.array import PiRGBArray
-from picamera import PiCamera
-from flask import Flask, render_template, request, session, logging, url_for, redirect, flash, Response
+# import cv2
+# import pytesseract
+# from picamera.array import PiRGBArray
+# from picamera import PiCamera
+from flask import Flask, render_template, request, session, logging, url_for, redirect, flash, make_response
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
-from flask_mail import Mail, Message
+# from flask_mail import Mail, Message
 
-from passlib.hash import sha256_crypt
-from camera import Camera
+from utils import Response
 
-engine = create_engine("sqlite:///database.sqlite")
-db = scoped_session(sessionmaker(bind=engine))
+# from passlib.hash import sha256_crypt
+# from camera import Camera
+
+from db import db
 
 app = Flask(__name__)
 
@@ -21,28 +22,59 @@ app.config['MAIL_USE_SSL'] = True
 app.config['MAIL_USERNAME'] = 'autogateapp@gmail.com'
 app.config['MAIL_PASSWORD'] = 'autogate123'
 
-mail = Mail(app)
+app.debug = True
+app.host = '0.0.0.0'
+app.reload = True;
+
+# mail = Mail(app)
 
 
 # route handlers
 from create_account import create_account
+from add_funds import add_funds
+from sign_in import sign_in
+from dashboards import admin_dashboard, user_dashboard 
+
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return render_template('index.html')
+
+
+@app.route('/admin-dashboard')
+def admin():
+    response = Response(request)
+    return admin_dashboard(request, response)
+
+@app.route('/user-dashboard')
+def admin():
+    response = Response(request)
+    return user_dashboard(request, response)
+
+
 
 @app.route("/signup", methods = ["POST", "GET"])
 def signup():
 
     if (request.method == 'POST'):
-        return create_account(request)
+        return create_account(request, response)
     else:
         return render_template('signup.html')
 
+@app.route('/add-funds', methods = [ "POST" ])
+def funds():
+    return add_funds(request, response)
 
-@app.route("/signin")
+
+
+@app.route("/signin", methods = [ "GET", "POST" ])
 def signin():
-    return render_template("signin.html")
+
+    response = Response(request)
+    if (request.method == 'GET'):
+        return render_template("signin.html")
+    else:
+        return sign_in(request, response)
 
 @app.route("/welcome", methods = ["GET", "POST"])
 def welcome():
@@ -54,8 +86,8 @@ def welcome():
             password_data = db.execute("SELECT hpassword FROM users WHERE email = :email", {"email":emails}).fetchone()
 
             if email_data is None:
-                messagess = "E-mail address not found"
-                return render_template("error.html", messagess = messagess)
+                error_msg = "E-mail address not found"
+                return render_template("error.html", error_msg = error_msg)
             else:
                 for pass_data in password_data:
                     if sha256_crypt.verify(passwords, pass_data):
@@ -68,15 +100,15 @@ def welcome():
 
                         return render_template("welcome.html", nm = nm, funds = funds, license = license)
                     else:
-                         messagess = "Incorrect Password"
-                         return render_template("error.html", messagess = messagess)
+                         error_msg = "Incorrect Password"
+                         return render_template("error.html", error_msg = error_msg)
 
         except ConnectionError as e:
-            messagess = "Connection Error. Check your internet connection and try again."
-            return render_template("error.html", messagess = messagess)
+            error_msg = "Connection Error. Check your internet connection and try again."
+            return render_template("error.html", error_msg = error_msg)
         except Exception as e:
-            messagess = "Sorry, something went wrong. Please try again."
-            return render_template("error.html", messagess = messagess)
+            error_msg = "Sorry, something went wrong. Please try again."
+            return render_template("error.html", error_msg = error_msg)
 
     return render_template("welcome.html", nm = 'EN EM', funds = 90, license = "90")
 
@@ -93,17 +125,17 @@ def recover():
             quest_db = db.execute("SELECT question FROM passwords WHERE email = :email", {"email":emai}).fetchone()
 
             if quest_db is None:
-                messagess = "E-mail Address Not Found"
-                return render_template("error.html", messagess = messagess)
+                error_msg = "E-mail Address Not Found"
+                return render_template("error.html", error_msg = error_msg)
             else:
                 quest = quest_db[0]
 
         except ConnectionError as e:
-            messagess = "Connection Error. Check your internet connection and try again."
-            return render_template("error.html", messagess = messagess)
+            error_msg = "Connection Error. Check your internet connection and try again."
+            return render_template("error.html", error_msg = error_msg)
         except Exception as e:
-            messagess = "Sorry, something went wrong. Please try again."
-            return render_template("error.html", messagess = messagess)
+            error_msg = "Sorry, something went wrong. Please try again."
+            return render_template("error.html", error_msg = error_msg)
 
     return render_template("recover.html", quest = quest)
 
@@ -130,15 +162,15 @@ def password():
                 msg.body = "Hie " + nom + " " + surnom + "! The password for your AutoGate account is " + paass + " \n\nRegards, \n\nThe AutoGate Team"
                 mail.send(msg)
             else:
-                messagess = "Answer is Incorrect"
-                return render_template("error.html", messagess = messagess)
+                error_msg = "Answer is Incorrect"
+                return render_template("error.html", error_msg = error_msg)
 
         except ConnectionError as e:
-            messagess = "Connection Error. Check your internet connection and try again."
-            return render_template("error.html", messagess = messagess)
+            error_msg = "Connection Error. Check your internet connection and try again."
+            return render_template("error.html", error_msg = error_msg)
         except Exception as e:
-            messagess = "Sorry, something went wrong. Please try again."
-            return render_template("error.html", messagess = messagess)
+            error_msg = "Sorry, something went wrong. Please try again."
+            return render_template("error.html", error_msg = error_msg)
 
     return render_template("password.html", e_mail = e_mail)
 
@@ -181,25 +213,25 @@ def scan():
         #         return redirect(url_for('scan'))
 
         # except Exception as e:
-        #     messagess = "Sorry, something went wrong. Please try again."
-        #     return render_template("error.html", messagess = messagess)
+        #     error_msg = "Sorry, something went wrong. Please try again."
+        #     return render_template("error.html", error_msg = error_msg)
 
         # return render_template("scan.html", text = text)
 
 
-def gen(camera):
-    while True:
-        frame = camera.get_frame()
-        yield (b'--frame\r\n'
-               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+# def gen(camera):
+#     while True:
+#         frame = camera.get_frame()
+#         yield (b'--frame\r\n'
+#                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
-@app.route('/video-feed')
-def video_feed():
-    return Response(gen(Camera()),
-                    mimetype='multipart/x-mixed-replace; boundary=frame')
+# @app.route('/video-feed')
+# def video_feed():
+#     return Response(gen(Camera()),
+#                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
 
 if __name__ == "__main__":
-    app.run(debug = True, use_reloader=True, host='0.0.0.0')
+    app.run()
     app.secret_key = "autogateapp"

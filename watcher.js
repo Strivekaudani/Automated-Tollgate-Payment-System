@@ -34,7 +34,7 @@ fileWatcher.on('change', function(file, stat) {
 	console.log(file, 'CHANGED');
 
 	const fileCutPath = file.substring(cuttingIndex);
-	const cmd = `sshpass -p "raspberry" scp ${file} pi@192.168.0.121:/home/pi/clayton/FLASK_APP/${fileCutPath}`;
+	const cmd = `sshpass -p "raspberry" scp ${file} pi@192.168.0.113:/home/pi/clayton/FLASK_APP/${fileCutPath}`;
 
 	child.exec(cmd, function (err, stdout, stderr) {
 		
@@ -61,14 +61,14 @@ dirWatcher.on('change', function(file, stats) {
 
 	setTimeout(function() {
 
-		if (changingFile)
+		if (changingFile) {
+			changingFile = null;
 			return;
+		}
 
 		console.log('REWATCHING...');
 		fileWatcher.removeAll();
 		watchRecursively(__dirname, 'FLASK_APP');
-
-		changingFile = null;
 
 	}, 4000);
 
