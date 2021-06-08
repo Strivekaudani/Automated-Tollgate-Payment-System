@@ -3,6 +3,125 @@
  	easing: 'slide'
  });
 
+
+ function setCSSVariablesForWindowDimensions() {
+
+	const elem = document.documentElement;
+	const winWidth = window.innerWidth + 'px';
+	const winHeight = window.innerHeight + 'px';
+
+	elem.style.setProperty('--window-height', winHeight);
+	elem.style.setProperty('--window-width', winWidth);
+
+}
+
+const divLoading = document.createElement('div');
+divLoading.style.display = 'none';
+divLoading.style.top = 0
+divLoading.style.bottom = 0;
+divLoading.style.left = 0;
+divLoading.style.right = 0;
+divLoading.style.position = 'fixed';
+divLoading.style.zIndex = 2000;
+divLoading.style.alignItems = 'center';
+divLoading.style.background = 'white';
+
+const div = document.createElement('div');
+div.setAttribute('role', 'status');
+div.classList.add('spinner-grow');
+div.style.marginLeft = 'calc(var(--window-width) / 2)'
+
+const span = document.createElement('span');
+span.classList.add('visually-hidden');
+
+div.append(span);
+divLoading.append(div);
+document.body.append(divLoading);
+
+function showLoading() {
+	divLoading.style.display = 'flex';
+}
+
+function hideLoading() {
+	divLoading.style.display = 'none';
+}
+
+// add axios
+const script = document.createElement('script');
+
+script.onload = function() {
+
+	const hideLoadingAfterResponseIsReceived = function(response) {
+		hideLoading();
+		return response;
+	}
+
+	const showLoadingBeforeSendingRequest = function(config) {
+		showLoading();
+		return config;
+	}
+
+	const hideLoadingWhenAnErrorOccurs = function(err) {
+		hideLoading();
+		throw err;	
+	}
+
+	axios.interceptors.request.use(showLoadingBeforeSendingRequest);
+	axios.interceptors.response.use(hideLoadingAfterResponseIsReceived, hideLoadingWhenAnErrorOccurs);
+
+}
+script.src ='/static/js/axios.min.js';
+
+document.body.append(script);
+
+
+
+window.addEventListener('resize', setCSSVariablesForWindowDimensions);
+setCSSVariablesForWindowDimensions();
+
+
+// functions
+
+function getRequestErrorMessage(error) {
+	const { response } = error;
+	return response.data.toString() || response.statusText || 'Something went wrong!!'
+}
+
+function getNumberPlate(elem) {
+
+	let number_plate = elem.getAttribute('data-number-plate');
+
+	while (number_plate === null && elem.tagName !== 'BODY') {
+		elem = elem.parentNode;
+		number_plate = elem.getAttribute('data-number-plate')
+	}
+
+	return number_plate;
+}
+
+async function payForThisCar(elem) {
+	
+	console.log(elem);
+	const number_plate = getNumberPlate(elem);
+
+	try {
+		await axios.post(`/api/cars/${number_plate}/payment`);
+
+		elem.innerHTML = 'PAID';
+		elem.disabled = true;
+
+		hFunds = document.getElementById('funds');
+		funds = parseFloat(hFunds.innerHTML.trim().substr(1)) - 10;
+		hFunds.innerHTML = '$' + funds.toFixed(2)
+
+	} catch (err) {
+		const error_msg = getRequestErrorMessage(err)
+		alert(error_msg);
+	}
+
+}
+
+
 (function($) {
 
 	"use strict";
@@ -346,4 +465,3 @@
 
 
 })(jQuery);
-

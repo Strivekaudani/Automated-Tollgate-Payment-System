@@ -12,7 +12,7 @@ from utils import Response
 # from passlib.hash import sha256_crypt
 # from camera import Camera
 
-from db import db
+# from db import db
 
 app = Flask(__name__)
 
@@ -23,7 +23,7 @@ app.config['MAIL_USERNAME'] = 'autogateapp@gmail.com'
 app.config['MAIL_PASSWORD'] = 'autogate123'
 
 app.debug = True
-app.host = '0.0.0.0'
+app.host = '192.168.0.113'
 app.reload = True;
 
 # mail = Mail(app)
@@ -31,9 +31,10 @@ app.reload = True;
 
 # route handlers
 from create_account import create_account
-from add_funds import add_funds
+from payments import add_funds, approve_funds, remove_payment
 from sign_in import sign_in
-from dashboards import admin_dashboard, user_dashboard 
+from dashboards import admin_dashboard, user_dashboard
+from cars import pay_for_this_car
 
 
 @app.route("/")
@@ -41,13 +42,19 @@ def index():
     return render_template('index.html')
 
 
+@app.route('/notice')
+def notice():
+    message = request.args.get('message')
+    return render_template('notice.html', message = message)
+
+
 @app.route('/admin-dashboard')
 def admin():
     response = Response(request)
     return admin_dashboard(request, response)
 
-@app.route('/user-dashboard')
-def admin():
+@app.route('/user-dashboard', methods = [ 'GET', 'POST' ])
+def user():
     response = Response(request)
     return user_dashboard(request, response)
 
@@ -56,15 +63,12 @@ def admin():
 @app.route("/signup", methods = ["POST", "GET"])
 def signup():
 
+    response = Response(request)
+
     if (request.method == 'POST'):
         return create_account(request, response)
     else:
         return render_template('signup.html')
-
-@app.route('/add-funds', methods = [ "POST" ])
-def funds():
-    return add_funds(request, response)
-
 
 
 @app.route("/signin", methods = [ "GET", "POST" ])
@@ -75,43 +79,6 @@ def signin():
         return render_template("signin.html")
     else:
         return sign_in(request, response)
-
-@app.route("/welcome", methods = ["GET", "POST"])
-def welcome():
-    if request.method == "POST":
-        try:
-            emails = request.form.get("username")
-            passwords = request.form.get("pword")
-            email_data = db.execute("SELECT email FROM users WHERE email = :email", {"email":emails}).fetchone()
-            password_data = db.execute("SELECT hpassword FROM users WHERE email = :email", {"email":emails}).fetchone()
-
-            if email_data is None:
-                error_msg = "E-mail address not found"
-                return render_template("error.html", error_msg = error_msg)
-            else:
-                for pass_data in password_data:
-                    if sha256_crypt.verify(passwords, pass_data):
-                        name_db = db.execute("SELECT name FROM users WHERE email = :email", {"email":emails}).fetchone()
-                        funds_db = db.execute("SELECT funds FROM users WHERE email = :email", {"email":emails}).fetchone()
-                        license_db = db.execute("SELECT carlicense FROM cars WHERE owner = :owner", {"owner":emails}).fetchone()
-                        nm = name_db[0]
-                        funds = funds_db[0]
-                        license = license_db[0]
-
-                        return render_template("welcome.html", nm = nm, funds = funds, license = license)
-                    else:
-                         error_msg = "Incorrect Password"
-                         return render_template("error.html", error_msg = error_msg)
-
-        except ConnectionError as e:
-            error_msg = "Connection Error. Check your internet connection and try again."
-            return render_template("error.html", error_msg = error_msg)
-        except Exception as e:
-            error_msg = "Sorry, something went wrong. Please try again."
-            return render_template("error.html", error_msg = error_msg)
-
-    return render_template("welcome.html", nm = 'EN EM', funds = 90, license = "90")
-
 
 @app.route("/forgot")
 def forgot():
@@ -232,6 +199,41 @@ def scan():
 
 
 
+# ============================================================================================
+# API ROUTES
+# ============================================================================================
+
+@app.route('/api/cars/<number_plate>/payment', methods = [ 'GET', 'POST' ])
+def pay_for_car(number_plate):
+    request.params = { 'number_plate': number_plate };
+    response = Response(request)
+    return pay_for_this_car(request, response)
+
+
+# ============================================================================================
+# PAYMENT ROUTES
+# ============================================================================================
+
+@app.route('/add-funds', methods = [ "POST" ])
+def funds():
+    response = Response(request)
+    return add_funds(request, response)
+
+
+@app.route('/approve-payment', methods = [ 'POST' ])
+def _approve_funds():
+    response = Response(request)
+    return approve_funds(request, response)
+
+@app.route('/remove-payment', methods = [ 'POST' ])
+def _remove_payment():
+    response = Response(request)
+    return remove_payment(request, response)
+
+
+
 if __name__ == "__main__":
-    app.run()
+    app.run(host="0.0.0.0", port=80)
     app.secret_key = "autogateapp"
+
+

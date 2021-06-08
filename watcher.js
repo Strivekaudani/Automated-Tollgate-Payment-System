@@ -1,4 +1,9 @@
 
+
+"use strict"
+
+// "IF A FILE IS RENAMED, IT PRODUCES AN ERRROR, I SHOULD FIX THAT"
+
 const FileWatcher = require('filewatcher');
 const child = require('child_process');
 const fs = require('fs');

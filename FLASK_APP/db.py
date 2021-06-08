@@ -1,12 +1,12 @@
 
-from sqlalchemy import create_engine
-from sqlalchemy.orm import scoped_session, sessionmaker
+# from sqlalchemy import create_engine
+# from sqlalchemy.orm import scoped_session, sessionmaker
 
-engine = create_engine("sqlite:///data.sqlite3")
-db = scoped_session(sessionmaker(bind=engine))
+# engine = create_engine("mariadb+pymysql://root@localhost/autogate?charset=utf8mb4")
+# db = scoped_session(sessionmaker(bind=engine))
 
-# creating tables
-## reading sql file
+# # creating tables
+# ## reading sql file
 # f = open("tables.sql", 'r');
 # contents = f.read();
 
@@ -51,3 +51,26 @@ db = scoped_session(sessionmaker(bind=engine))
 # 	db.commit();
 # except Exception:
 # 	pass
+
+
+from pymongo import MongoClient
+
+
+client = MongoClient('mongodb://localhost:27017');
+db = client['autogate']
+
+
+data = {
+	'_id': "claytonsibanda@gmail.com",
+	"name": 'CLAYTON',
+	'surname': 'SIBANDA',
+	'email': 'claytonsibanda@gmail.com',
+	'password': 'admin',
+	'is_admin': True,
+	'funds': 0
+}
+
+try:
+	db.users.insert_one(data);
+except Exception as e:
+	print(str(e))

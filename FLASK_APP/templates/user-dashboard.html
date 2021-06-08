@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>AutoGate | Dashboard</title>
+    <title>AutoGate | User Dashboard</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -26,6 +26,7 @@
     <link rel="stylesheet" href="{{url_for('static', filename = 'css/icomoon.css') }}">
     <link rel="stylesheet" href="{{url_for('static', filename = 'css/style.css') }}">
     <link rel="stylesheet" href="{{url_for('static', filename = 'css/extra.css') }}">
+    <link rel="stylesheet" type="text/css" href="/static/st">
   </head>
   <body>
     <a name = "top"></a>
@@ -78,19 +79,11 @@
               </div>
             </div>
           </div>
-          <div class="col-md-6 col-lg-3 d-flex align-self-stretch ftco-animate">
+          <div class="col-md-12 col-lg-3 d-flex align-self-stretch ftco-animate">
             <div class="media block-6 services d-block text-center">
               <div class="media-body">
                 <h3 class="heading mb-3">Balance</h3>
-                <p><h1> ${{funds}}</h1></p>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-6 col-lg-3 d-flex align-self-stretch ftco-animate">
-            <div class="media block-6 services d-block text-center">
-              <div class="media-body">
-                <h3 class="heading mb-3">Car License</h3>
-                <p><h1>{{license}}</h1></p>
+                <p><h1 id="funds">{{funds}}</h1></p>
               </div>
             </div>
           </div>
@@ -98,50 +91,29 @@
       </div>
     </section>
 
+    <section class="ftco-section center-align" style="padding: 0;">
 
+          <h4 class="center-align">MY CARS</h4>
+        <div>
+          {% for car in cars %}
+            <div data-number-plate="{{ car['number_plate'] }}" class="valign-wrapper" style="width: 400px; margin-left: calc((var(--window-width) - 400px) / 2);">
+              <span style="background: green; color: white; padding: 5px; font-size: 20px; margin-right: 20px;">
+                {{car["number_plate"]}}
+              </span>
+              
+              {% if car["car_license_paid"]: %}
+                <button class="btn btn-primary" disabled>PAID</button>
+              {% else%}
+                <button class="btn btn-primary" onclick="payForThisCar(this)">PAY ($10.00)</button>
+              {% endif %}
 
-
-        <!-- <section class="ftco-section ftco-no-pt ftco-no-pb">
-          <div class="container-fluid px-0">
-            <div class="row no-gutters">
-              <div class="col-md text-center d-flex align-items-stretch">
-                <div class="services-wrap d-flex align-items-center img">
-                  <div class="text-about py-5 px-4">
-                    <h1 class="logo">
-                      Pending Confirmations
-                    </h1>
-                    <h2>Confirm Payments </h2>
-                    <div class="container" style="width: 100%; height: 500px; display: flex; justify-content: center;">
-                      <div class="output-container" style="width: 90%; height: 450px;">
-                        <table class="table">
-                          <thead>
-                            <tr>
-                              <th scope="col">Email</th>
-                              <th scope="col">Number Plate</th>
-                              <th scope="col">Amount</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr>
-                              <th scope="row">25/07/2020</th>
-                              <td>07:00</td>
-                              <td>Siren was turned on</td>
-                            </tr>
-                            <tr>
-                            <th scope="row">25/07/2020</th>
-                            <td>07:00</td>
-                            <td>Pump was turned on</td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
-          </div>
-        </section> -->
+          {% endfor %}
+
+        </div>
+        </tbody>
+      </table>
+    </section>
 
       <section class="ftco-section ftco-booking bg-light">
       	<div class="container ftco-relative">

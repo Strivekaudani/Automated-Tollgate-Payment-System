@@ -3,65 +3,16 @@ from db import db
 import time
 from uuid import uuid4
 from flask import make_response
+import json
 
 AUTH_COOKIE_DURATION = 30 * 60;
 
 
+def print_stuff_1():
+	print('print_stuff_1')
 
-
-class Response(object):
-	"""docstring for Response"""
-	def __init__(self, request):
-		super(Response, self).__init__()
-		self.cookies = {}
-		self.headers = {}
-		self.body = ""
-		self.status = 200
-
-		for middleware in middlewares:
-			middleware(request, self);
-
-	def set_body(self, body):
-		self.body = body;
-		return self;
-
-	def set_cookie(self, cookie, value):
-		self.cookies[cookie] = value
-		return self
-
-	def set_header(self, header, value):
-		self.headers[header] = value;
-		return self
-
-	def redirect(self, location):
-		self.set_header('location', location)
-		self.status = 307
-		self.body = "redirect"
-		return self.render()
-
-	def add_cookies(self, param):
-
-		for key in param:
-			self.cookies[key] = param[key];
-
-		return self
-
-	def render(self):
-
-		status = self.status
-		body = self.body
-		cookies = self.cookies
-		headers = self.headers
-
-		response = make_response(body, status)
-
-		for key in cookies:
-			response.set_cookie(key, cookies[key])
-
-		for key in headers:
-			response.headers[key] = headers[key]
-
-		return response
+def print_stuff_2():
+	print('print_stuff_2')
 
 
 def uuid():
@@ -81,32 +32,36 @@ def auth(request, response):
 	cookie = request.cookies.get('auth')
 	time = now()
 
-	sql = 'SELECT email,  is_admin FROM users WHERE auth_cookie=:cookie AND auth_cookie_expires>:_time';
-	data = { "cookie": cookie, "_time": time }
+	db = request.db
+	query = {
+		'auth_cookie': cookie,
+		'auth_cookie_expires': {
+			'$lt': time
+		}
+	}
 
-	user = db.execute(sql, data).fetchone()
+	user = db.users.find_one({ 'auth_cookie': cookie })
 
 	if (user == None):
 		request.auth = None
 		return;
 
-	email = user[0];
-	is_admin = user[1];
+	email = user['email'];
+	is_admin = user['is_admin'];
 
 	# updating cookie
 	new_cookie= uuid()
 	expires = now() + AUTH_COOKIE_DURATION;
 
-	sql = 'UPDATE users SET auth_cookie=:new_cookie, auth_cookie_expires=:expires WHERE email=:email'
-	data = {
-		"new_cookie": new_cookie,
-		"email": email,
-		"expires": expires
+	update = {
+		'$set': {
+			"auth_cookie": new_cookie,
+			"expires": expires
+		}
 	}
 
-
-	db.execute(sql, data)
-	db.commit()
+	query = { 'email': email };
+	db.users.update_one(query, update);
 
 	request.user = { "is_admin": is_admin, "email": email}
 	response.set_cookie('auth', new_cookie)
@@ -116,7 +71,7 @@ def now():
 	return int(time.time())
 
 def currency(amount, sign = ''):
-	return sign + "${:,.2f}"
+	return sign + "{:,.2f}".format(amount)
 
 
 def db_middleware(request, response):
@@ -125,8 +80,8 @@ def db_middleware(request, response):
 
 
 middlewares = [
-	auth,
-	db_middleware
+	db_middleware,
+	auth
 ]
 
 
@@ -173,3 +128,82 @@ class HTMLComponent():
 
 		else:
 			return opening_tag
+
+class Response(object):
+	"""docstring for Response"""
+	def __init__(self, request):
+		super(Response, self).__init__()
+		self.cookies = {}
+		self.headers = {}
+		self.body = "OK"
+		self.status = 200
+
+
+		for middleware in middlewares:
+			middleware(request, self);
+
+	def set_content_type(self, content_type):
+		self.headers['content-type'] = content_type;
+
+	def set_json_body(self, data):
+		self.set_content_type('application/json');
+		json_str = json.dumps(data);
+		self.set_body(json_str)
+
+
+	def set_body(self, body):
+		self.body = body;
+		return self;
+
+	def set_cookie(self, cookie, value):
+		self.cookies[cookie] = value
+		return self
+
+	def set_header(self, header, value):
+		self.headers[header] = value;
+		return self
+
+	def redirect(self, location):
+		self.set_header('location', location)
+		self.status = 307
+		self.body = "redirect"
+		return self.render()
+
+	def redirect_302(self, location):
+		self.set_header('location', location)
+		self.status = 302
+		self.body = "redirect"
+		return self.render()
+
+	def status_500(self):
+		self.status = 500;
+		self.set_body('Something went wrong on our end, please try again');
+		return self.render()
+
+	def add_cookies(self, param):
+
+		for key in param:
+			self.cookies[key] = param[key];
+
+		return self
+
+	def render(self):
+
+		status = self.status
+		body = self.body
+		cookies = self.cookies
+		headers = self.headers
+
+		response = make_response(body, status)
+
+		for key in cookies:
+			response.set_cookie(key, cookies[key])
+
+		for key in headers:
+			response.headers[key] = headers[key]
+
+		return response
+
+	def __str__(self):
+		return self.render()
+
