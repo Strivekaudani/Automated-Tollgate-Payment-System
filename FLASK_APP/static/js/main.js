@@ -87,39 +87,94 @@ function getRequestErrorMessage(error) {
 	return response.data.toString() || response.statusText || 'Something went wrong!!'
 }
 
-function getNumberPlate(elem) {
+/* ==============================================================
+	# API FUNCTIONS
+============================================================== */
 
-	let number_plate = elem.getAttribute('data-number-plate');
-
-	while (number_plate === null && elem.tagName !== 'BODY') {
-		elem = elem.parentNode;
-		number_plate = elem.getAttribute('data-number-plate')
-	}
-
-	return number_plate;
-}
-
-async function payForThisCar(elem) {
-	
-	console.log(elem);
-	const number_plate = getNumberPlate(elem);
+async function openGateTemporarily() {
 
 	try {
-		await axios.post(`/api/cars/${number_plate}/payment`);
-
-		elem.innerHTML = 'PAID';
-		elem.disabled = true;
-
-		hFunds = document.getElementById('funds');
-		funds = parseFloat(hFunds.innerHTML.trim().substr(1)) - 10;
-		hFunds.innerHTML = '$' + funds.toFixed(2)
-
+		await axios.post('/api/open-gate-command');
 	} catch (err) {
-		const error_msg = getRequestErrorMessage(err)
+		const error_msg = getRequestErrorMessage(err);
 		alert(error_msg);
 	}
-
 }
+
+async function scanCarPlates() {
+
+	try {
+		await axios.get('/api/scanned-plates');
+	} catch (err) {
+		const error_msg = getRequestErrorMessage(err);
+		alert(error_msg);
+	} 
+}
+
+// function getNumberPlate(elem) {
+
+// 	let number_plate = elem.getAttribute('data-number-plate');
+
+// 	while (number_plate === null && elem.tagName !== 'BODY') {
+// 		elem = elem.parentNode;
+// 		number_plate = elem.getAttribute('data-number-plate')
+// 	}
+
+// 	return number_plate;
+// }
+
+// async function payForThisCar(elem) {
+	
+// 	const number_plate = getNumberPlate(elem);
+
+// 	try {
+// 		await axios.post(`/api/cars/${number_plate}/payment`);
+
+// 		elem.innerHTML = 'PAID';
+// 		elem.disabled = true;
+
+// 		hFunds = document.getElementById('funds');
+// 		funds = parseFloat(hFunds.innerHTML.trim().substr(1)) - 10;
+// 		hFunds.innerHTML = '$' + funds.toFixed(2)
+
+// 	} catch (err) {
+// 		const error_msg = getRequestErrorMessage(err)
+// 		alert(error_msg);
+// 	}
+
+// }
+
+
+// /* ==============================================================
+// 	# LINK MANAGEMENT
+// ============================================================== */
+
+// (function() {
+
+// 	function addLink(path, display) {
+// 		const a = document.createElement('a');
+// 		a.href = path;
+// 		a.innerHTML = display
+// 		a.classList.add('nav-link');
+
+// 		const li = document.createElement('li');
+// 		li.classList.add('nav-item');
+// 		li.append(a)
+
+// 		if (path === window.location.pathname)
+// 			li.classList.add('active');
+
+// 		navUl.append(li);
+// 	}
+
+// 	const navUl = document.querySelector('nav ul');
+
+// 	window.navLinks.forEach(link => {
+// 		const { path, caption } = links;
+// 		addLink(path, caption);
+// 	})
+	
+// })()
 
 
 (function($) {

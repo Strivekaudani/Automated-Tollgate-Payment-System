@@ -1,5 +1,5 @@
 
-from utils import currency , HTMLComponent
+from utils import currency, date_from_timestamp
 from flask import render_template, make_response
 
 def user_dashboard(request, response):
@@ -19,8 +19,9 @@ def user_dashboard(request, response):
 	cars = user['cars']
 	funds = user['funds']
 	funds = currency(funds, '$');
+	name = user['name'] + ' ' + user['surname'];
 
-	body = render_template('user-dashboard.html', cars=cars, funds=funds)
+	body = render_template('user-dashboard.html', cars=cars, funds=funds, name=name)
 	response.set_body(body)
 
 	return response.render();
@@ -46,7 +47,6 @@ def admin_dashboard(request, response):
 	db = request.db;
 
 	payments = list(db.payments.find({}));
-	print(payments);
 	projection = { "name": 1, "surname": 1 }
 
 	for payment in payments:
@@ -57,11 +57,9 @@ def admin_dashboard(request, response):
 		depositer = db.users.find_one(query, projection);
 
 		payment["depositer"] = depositer;
+		payment["time"] = date_from_timestamp(payment["time"])
 
-		print(payment)
-
-
-	body = render_template('admin-dashboard.html', payments=payments);
+	body = render_template('admin-dashboard.html', payments=payments, payments_count=len(payments));
 	response.set_body(body)
 
 	return response.render();

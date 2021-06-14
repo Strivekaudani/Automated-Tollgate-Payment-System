@@ -1,18 +1,32 @@
 
 from db import db
 import time
+import datetime
 from uuid import uuid4
 from flask import make_response
 import json
 
+# from PIL import Image
+import pytesseract
+import cv2
+# import numpy as np
+
 AUTH_COOKIE_DURATION = 30 * 60;
 
+def text_from_image(image):
 
-def print_stuff_1():
-	print('print_stuff_1')
+	# resize image
+	RESIZE_FACTOR = 3;
+	width = int(image.shape[1] * RESIZE_FACTOR);
+	height = int(image.shape[0] * RESIZE_FACTOR);
+	dim = (width, height);
+	resized = cv2.resize(image, dim);
+	
+	gray_scale = cv2.cvtColor(resized, cv2.COLOR_BGR2GRAY); # gray_scale image
+	ret, thresholded = cv2.threshold(gray_scale, 90, 255, cv2.THRESH_BINARY); # thresholded
 
-def print_stuff_2():
-	print('print_stuff_2')
+	return pytesseract.image_to_string(thresholded, lang='eng').strip(); # return detected text
+
 
 
 def uuid():
@@ -56,12 +70,12 @@ def auth(request, response):
 	update = {
 		'$set': {
 			"auth_cookie": new_cookie,
-			"expires": expires
+			"auth_cookie_expires": expires
 		}
 	}
 
 	query = { 'email': email };
-	db.users.update_one(query, update);
+	db.users.update(query, update);
 
 	request.user = { "is_admin": is_admin, "email": email}
 	response.set_cookie('auth', new_cookie)
@@ -77,6 +91,11 @@ def currency(amount, sign = ''):
 def db_middleware(request, response):
 	request.db = db
 	response.db = db
+
+
+def date_from_timestamp(timestamp):
+	return str(datetime.datetime.fromtimestamp(timestamp))
+
 
 
 middlewares = [

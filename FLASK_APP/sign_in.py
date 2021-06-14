@@ -1,13 +1,13 @@
 
 from flask import render_template, make_response
-# from passlib.hash import sha256_crypt
+from passlib.hash import sha256_crypt
 from utils import uuid, now
 from constants import AUTH_TOKEN_VALIDITY_DURATION
 
 def sign_in(request, response):
 
 	# extracting posted data
-	email = request.form["email"];
+	email = request.form["email"].lower();
 	password = request.form["password"]
 
 	# validating credentials
@@ -19,7 +19,8 @@ def sign_in(request, response):
 	if user == None:
 		return response.redirect_302('/notice?message=Invalid credentials')
 
-	if user['password'] != password:
+	is_password_valid = sha256_crypt.verify(password, user['password'])
+	if not is_password_valid:
 		return response.redirect_302('/notice?message=Invalid credentials')
 
 	# auth cookie
@@ -35,7 +36,7 @@ def sign_in(request, response):
 		}
 	}
 
-	db.users.update_one(query, update)
+	db.users.update(query, update)
 
 	# select which dashboard to render, based on the account type
 	is_admin = user['is_admin'];

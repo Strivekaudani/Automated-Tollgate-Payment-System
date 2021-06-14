@@ -1,18 +1,16 @@
-# import cv2
-# import pytesseract
-# from picamera.array import PiRGBArray
-# from picamera import PiCamera
-from flask import Flask, render_template, request, session, logging, url_for, redirect, flash, make_response
+
+from flask import Flask, render_template, request, session, logging, url_for, redirect, flash, make_response, Response as FlaskResponse
 from sqlalchemy import create_engine
-from sqlalchemy.orm import scoped_session, sessionmaker
+import os
 # from flask_mail import Mail, Message
 
 from utils import Response
 
 # from passlib.hash import sha256_crypt
-# from camera import Camera
+from camera import Camera
 
-# from db import db
+os.system('clear')
+
 
 app = Flask(__name__)
 
@@ -23,7 +21,7 @@ app.config['MAIL_USERNAME'] = 'autogateapp@gmail.com'
 app.config['MAIL_PASSWORD'] = 'autogate123'
 
 app.debug = True
-app.host = '192.168.0.113'
+app.host = '192.168.0.100'
 app.reload = True;
 
 # mail = Mail(app)
@@ -34,12 +32,20 @@ from create_account import create_account
 from payments import add_funds, approve_funds, remove_payment
 from sign_in import sign_in
 from dashboards import admin_dashboard, user_dashboard
-from cars import pay_for_this_car
+from cars import pay_for_car, add_car, remove_car
+from boom_gate import open_and_close, open_gate_handler
+from scan import scan_plates
 
 
 @app.route("/")
 def index():
     return render_template('index.html')
+
+@app.route('/logout')
+def logout():
+
+    response = Response(request)
+    return response.redirect_302('/')
 
 
 @app.route('/notice')
@@ -144,58 +150,33 @@ def password():
 @app.route("/scan", methods = ["GET", "POST"])
 def scan():
 
-        return render_template("scan.html");
+    response = Response(request)
 
-        # try:
-        #     camera = PiCamera()
-        #     camera.resolution = (640, 480)
-        #     camera.framerate = 30
+    user = request.user;
 
-        #     rawCapture = PiRGBArray(camera, size=(640, 480))
+    if (user == None):
+        return response.redirect_302('/notice?message=You need to login to access this page.');
 
-        #     for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
-        #     	image = frame.array
-        #     	cv2.imshow("Frame", image)
-        #     	key = cv2.waitKey(1) & 0xFF
+    is_not_admin = not user["is_admin"];
 
-        #     	rawCapture.truncate(0)
+    if (is_not_admin):
+        return response.redirect_302('/notice?message=You are not authorized to access this page.');
 
-        #     	if key == ord("s"):
-        #     		text = pytesseract.image_to_string(image)
-        #     		print(text)
-        #     		cv2.imshow("Frame", image)
-        #     		cv2.waitKey(0)
-        #     		break
-
-        #     cv2.destroyAllWindows()
-
-        #     email_db = db.execute("SELECT owner FROM cars WHERE regnum = :regnum", {"regnum":text}).fetchone()
-        #     email = email_db[0]
-        #     balance_db = db.execute("SELECT funds FROM users WHERE email = :email" , {"email":email}).fetchone()
-        #     balance = balance_db[0]
-
-        #     if balance is not None:
-        #         balance = balance - 100
-        #         db.execute("UPDATE users SET funds = :funds WHERE email = :email" , {"funds":balance, "email":email})
-        #         return redirect(url_for('scan'))
-
-        # except Exception as e:
-        #     error_msg = "Sorry, something went wrong. Please try again."
-        #     return render_template("error.html", error_msg = error_msg)
-
-        # return render_template("scan.html", text = text)
+    response.body = render_template("scan.html");
+    return response.render();
 
 
-# def gen(camera):
-#     while True:
-#         frame = camera.get_frame()
-#         yield (b'--frame\r\n'
-#                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
-# @app.route('/video-feed')
-# def video_feed():
-#     return Response(gen(Camera()),
-#                     mimetype='multipart/x-mixed-replace; boundary=frame')
+def gen(camera):
+    while True:
+        frame = camera.get_frame()
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+
+@app.route('/video-feed')
+def video_feed():
+    return FlaskResponse(gen(Camera()),
+                    mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
 
@@ -203,12 +184,16 @@ def scan():
 # API ROUTES
 # ============================================================================================
 
-@app.route('/api/cars/<number_plate>/payment', methods = [ 'GET', 'POST' ])
-def pay_for_car(number_plate):
-    request.params = { 'number_plate': number_plate };
+@app.route('/api/open-gate-command', methods = [ "POST" ])
+def _open_gate_handler():
     response = Response(request)
-    return pay_for_this_car(request, response)
+    return open_gate_handler(request, response);
 
+
+@app.route('/api/scanned-plates', methods = [ 'GET' ])
+def _scan_plates():
+    response = Response(request)
+    return scan_plates(request, response);
 
 # ============================================================================================
 # PAYMENT ROUTES
@@ -229,6 +214,26 @@ def _approve_funds():
 def _remove_payment():
     response = Response(request)
     return remove_payment(request, response)
+
+# ============================================================================================
+# CAR ROUTES
+# ============================================================================================
+
+@app.route('/add-car', methods = [ "POST" ] )
+def _add_car():
+    response = Response(request)
+    return add_car(request, response);
+
+@app.route('/remove-car', methods = [ "POST" ] )
+def _remove_car():
+    response = Response(request)
+    return remove_car(request, response);
+
+@app.route('/pay-for-car', methods = [ "POST" ] )
+def _pay_for_car():
+    response = Response(request)
+    return pay_for_car(request, response);
+
 
 
 

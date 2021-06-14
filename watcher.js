@@ -8,6 +8,8 @@ const FileWatcher = require('filewatcher');
 const child = require('child_process');
 const fs = require('fs');
 
+const PI_IP = '192.168.0.103'
+
 
 const fileWatcher = new FileWatcher();
 const dirWatcher = new FileWatcher();
@@ -39,7 +41,7 @@ fileWatcher.on('change', function(file, stat) {
 	console.log(file, 'CHANGED');
 
 	const fileCutPath = file.substring(cuttingIndex);
-	const cmd = `sshpass -p "raspberry" scp ${file} pi@192.168.0.113:/home/pi/clayton/FLASK_APP/${fileCutPath}`;
+	const cmd = `sshpass -p "raspberry" scp ${file} pi@${PI_IP}:/home/pi/clayton/FLASK_APP/${fileCutPath}`;
 
 	child.exec(cmd, function (err, stdout, stderr) {
 		
