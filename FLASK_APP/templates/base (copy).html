@@ -1,0 +1,139 @@
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>
+		 Scan Vehicles | Autogate
+		</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+		<link href="https://fonts.googleapis.comcss?family=Poppins:300,400,500,600,700" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css?family=Barlow+Condensed:500,600,700&display=swap" rel="stylesheet">
+
+		<link rel="stylesheet" href="../static/css/open-iconic-bootstrap.min.css">
+		<link rel="stylesheet" href="../static/css/animate.css">
+
+		<link rel="stylesheet" href="../static/css/owl.carousel.min.css">
+		<link rel="stylesheet" href="../static/css/owl.theme.default.min.css">
+		<link rel="stylesheet" href="../static/css/magnific-popup.css">
+
+		<link rel="stylesheet" href="../static/css/aos.css">
+		<link rel="stylesheet" href="../static/css/flaticon.css">
+
+		<link rel="stylesheet" href="../static/css/ionicons.min.css">
+		<link rel="stylesheet" href="../static/css/bootstrap.min.css">
+		<link rel="stylesheet" href="../static/css/bootstrap-datepicker.css">
+		<link rel="stylesheet" href="../static/css/jquery.timepicker.css">
+
+		<link rel="stylesheet" href="../static/css/icomoon.css">
+		<link rel="stylesheet" href="../static/css/style.css">
+		<link rel="stylesheet" href="../static/css/extra.css">
+	</head>
+	<body>
+
+		<a name = "top"></a>
+		<nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar" style="background: rgba(0,0,0, 0.5) !important;">
+			<div class="container" style="background: rgba(0,0,0, 0.5) !important;">
+				<a class="navbar-brand" href="{{url_for('index')}}">AutoGate</a>
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="oi oi-menu"></span> Menu
+				</button>
+
+				<div class="collapse navbar-collapse" id="ftco-nav">
+					<ul class="navbar-nav ml-auto">
+						<li class="nav-item active"><a href="/" class="nav-link">notice</a></li>
+						<li class="nav-item"><a href="/" class="nav-link">HOME</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+
+		<section class="services-section ftco-section">
+			<div class="container">
+				<div class="row justify-content-center pb-3">
+					<div class="col-md-10 heading-section text-center ftco-animate">
+						<span class="subheading">Dashboard</span>
+						<h2 class="mb-4">Scan Number Plate</h2>
+						<p>
+							<img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAoHCBUVFRgSFRYYGBgYGBoYGBgYGBkYGBgYGBgZGRgYGhgcIS4lHB4rIRgYJjgmKy8xNjU1GiQ7QDs0Py40NTEBDAwMEA8QHhISHzQrISUxNjQ0NDE0NjQ0NDQxNzQ0NTQ0NDQ0NDQ0MTQ0NDQ0NDQ0NDQ0NDQ0NDQ0MTQ0NDQ0NP/AABEIAMIBAwMBIgACEQEDEQH/xAAbAAABBQEBAAAAAAAAAAAAAAACAQMEBQYAB//EAEYQAAIBAgIECgcGBQMDBQEAAAECAAMRBBIFITFRBhNBUmGBkZKh0RQVInGxwfAyQlNyotIjYoLC4TOT4hZDgyRUc7LyB//EABoBAAMBAQEBAAAAAAAAAAAAAAABAgMEBQb/xAAuEQACAQIGAQIFBAMBAAAAAAAAAQIDEQQSEyExUWEFQRQVInGRUoGhwSMy8DP/2gAMAwEAAhEDEQA/ALjEVDqtfWbG23KwKt4Ex7BYriA2cG4puEsPvlSASd3JfpEpX0quxqdZbbgHAPQQbxsaTTZlrsNpUJtPJrLb5vmuncxs0azALlpoDyKI9X0glBRVfaf9NPvO2wNbmjxmWXSGIfVTphByNUbMR/RsvLPAaMIbjarmo5+8xvboA5B7pd3JWQtluTcBSYBqj/bqOXboJ2L1CwkuCsLNNkklYybu7gVDAUQnaIkze7KSHVEMCCIYMoDrTjFnRNAJEIhRImhobYRLRwxsmSyjosQGcDEAQMIQLxVlJisKYkW86MVhDBhGCTGIQwGhmA0dhDRgO0cYQGEAGyI00dMaaMBl5DrPJdQyvrveRKQJXGbzok6ZZjSyJoQRxVHRKj0lt8Q4lt8yuXYvVcCSaeKtyzKVcbkGZmtyDp90iHSLtszn3CaRlJ8EtJcm9XGDltCOOXfPPxiX5jn3kD5R1HY7QR72N/ATVKoyG4m3OJU8ohJiVvtmLFuUkf1P5xGr0xtZu1v3x6c/AZom6GLXeIQxa7xPPji0vqz9rfvhrihufx/fBRn4FeJ6B6Ym+ccam+YIYo8iv9f1wGxh5rdv/OPLPwGaJ6B6am+d6Ym+eeNjiNqt2/8AOCMf0HtP74skvAZonobYtN8bOIXfPP2x/R4/8oHrJPr/APUHTk+h5kehiuu+KMSN8869Zp0fX9UIaTXeO0/ui0pdoMyPRDXXfFGIG+eeDSg6PH90Q6S+rt+6GlLwGZHovHrviriByzzkaQO79TfvnLpA7v1N++PTl4DNE9HNZd87jRPOPTW3HvP++L6W2495/wB8enPwLNE9EzCCWnnZxjbj33/dO9Ofp77/ALo8kwvE9Bf61QC08/OkX3t3384nrN+c/fPlC0+hXj2bt6gjbHpmGOkn5z96/wDbAbS7jax6wP8AET1F7DWV+5sq7jfILmZ1NLMwuCDBbSL75zSqb7mqh0XuaLM76yedJzDyM0yYaKcMJLtBaOwMxem6p41hyLYDsufGVqpUIzKjld4UkatuuSdNH+NU/OflJGA0mVw1WiXcFjTyKGYC2Z8+zUAQwvv6ZUBMr8lQhfYf2vs+yfa/Lv6o2lF2tZGOY5RZSbttsN56JqNIacQq7JUfM5pslOzAUGQg3BPsiwGUZdobXCGn6bVdbZENEqGRSBTq1Mr1XCjXctmW45DqliMumDqklQjkrqYBGup3EW1H3zuJcAkqwAOUkggBuaTyHomn9fItQWquQMM9Nn9tTUfI4RiNuouAC2v2b6p1LSuH9H9GdnOdHd32rx7HMrEEZmIyIua+xjGIy4Yyx0lo2pQSlUZltWTOmUm4FlPtXAsfaG+V+ybjSmiXxWGwnFsnsUgGzPl2qn7TBbobMPQpPUdaa3LMQoHSTYfGWWnOD1bChWcqVa4DISQCNoNwNc0XBrRK4R6mJxLIBSAVSpzgO4FyABckBgNXOO6WGHOGxNGpg1rmozlqil0ZMj6jcEjZc6x0tGuBGQw3Bmu+H9KTIy2Y5ATnspsbC1jsOq8i4LQ9SpRqYlCuSn9oEnNsvqFrcs2WGx74XAUXGopXZXTeM1QMp6xt6BJWPpURgsVVoEZKyh8o1ZW9kMLcmsbOTXHZCMhT4K1WRKvG0VV1zJncqSLX3SHpbQNbDotRyjoxsHRs633X6j2TW6R0PUxOBwqUst1QE5mC6io3yJpeiMNo30ao6tVdw4UNmyjVc+H6omkNGT0Zo6piHFOkuZiCdZsABtJO6XQ4HVici1sOz8wVfbuNotbbH/8A+cV0XEurMFL0yqk6vazKQB2GFg+BuN40baYv/qh1IX+ZQrZr7th90lLYb5KzAcG8RUqvQAVXp63DtYCxA2694k4cEcTlLIaVTKLlUqKzWG4csv8AgfTyYnGK9Q1slPKz3N3ta+sknkte/JJHBLF4Z3dcNSenW4tsjVHLpfVYEX327I7AYuno6qaD4kAcWjBGJOsMbCwH9Q7Y7gtGVKiVKiAFaSZ3ubELr2DlPsnsmm0Lg3xGjq+Hp2NU1Q5S4BsCh5fyt2R3R2jKmEwOLOIARqiBEUspYn2hyE8/wMLisZk6NqpTTEEDJUYqhvclhm+7tH2TL6lwWxW1kpqSLhHqIrm/Rrj2krjR2BCkBuNYgk2AN6liSeTXeWWOwWIqvmxGjadZyFvVpVmTNYAA3B5OmLMx2KJdG1BUGH4r+MWtkJXZlzXzXtbKCb35JZPwcxP/ALcdVWl+6TsHhVp6VSmru6qCxLu1R0Y0nuhdiSbajr50j4rRKszn1TVJLMcwxLa7sTmtfVe97RZm3yVZGeoaIrYm7UaZZVIDe0igMRe3tML6jDxegK1Jc9WkyKdWa6ML8gJUm3XLnQ70xo6sawco1amp4vKHJC0rWzato+MKu9IaPqejB8grJxoq2zjWhGXL7O0p1XjUmFkef4mtbWCbcgBAJ6SeQSIMUWOVr+46+sGS6CXunKNWv3k/A/GM4uiAenWOsi1vn1ROcr7BljYhaPIWsV17hr1faA132i1+u00r4QTK4Vr4ge8zbuJlJXZSKz0WLJtp0VguzTwWSHFlCPPuEFJ0rOSjkM2YEKSCLDlAtvlUKg5rX9x1T0+sNREo8VglvcSHJrgaijF5+hu6YhfobumadqAETixJ1X0XkRms/Q3dMJX6G7rTT06V5KTDjfDWYZEZAP0N3T5Qi1/ut3T5TXMiiJ7G+Gsw00ZAsea3cbyjZY7j3T5TZkJvjTUxyRa7HpIyWc7m7pgs9t46jNbxQgvhUb7Sg+8Aw12GkjIvVB/yIJea31fT5id0eUVdG0+YvdEHXYaZkuMjvpbWtnNt1zbsmpGiqXMTuiF6ppcxO6I9cWmZRcR/NDp17fe19c1I0RR/DTsEfoaPRPsKq33C0NYNMy1DFspuHKneGKntEkHGl9b1Mx/mfMfEzUrhRDGEXlENZ9BpozK4pOV0t+b5STQ0oiiwrEDcKjKOwG0vGwwjXE9H12R6zFpog0NKYcDWyixvdWsbnabjXHvXWH/Ef/cfzi1MIBrsOyRKlBdw7ItVjyAPpXDg+yRYbPa1X90aq6VQggPYHWQHOUkbCV2E6hCagu4QRgweQR6r6GoFXWr0yb5rHeDY+7pjT1l23vqtctc+7olq+BUcg7JyYFSdglaj6JcEUGiSDXXw6yB8/CbqMUaSqBYAe4SQI0SxrLOhToxXNAITGCIpgBHxLWBO6Z9FxFZQ6lERtahgWYryEm80WIS6kdEq9AG+Hp/lt2Ej5TzsdVlSipROqhFSdmVb6IxJ/wC4ndaCdDYjnp2NLvSmLNGk1QKGIIABvbWbckqNFcJGqVUpuiAO2W4LAgnZt6bTjpVMTVg5xtZG8o0oyUXe416mxHPT9UX1NiOfT/VNVkkLS2N4imamUMbgAHUNZ3+68wp4utOSirXZcqUIq7KI6HxPOT9XlK7GCrTfiyykga7X5dgl1orhK1SqlNqaqHOW4JuDY25N9pL0loMVX4wNlJ1NcXBty7dRnZrTozSr2s17GWSM1eBT4bR2IdQ6sliL7W8oR0TiedT7z+UvcRVGFw5IGYJYAE2uWYDWeu8q8Bwlz1EptTCh2C5g5JGbUDa28iSqlaonKnbKuxuNOLUZckX1ZiudT7z+UX1bi+cneeavJFKAbZxfMKnS/BtoR8mT9W4veneeKMBjN9PvNNNiqqpYWuTs3WGttey9gTaOplIDDYdlwRfqMt46sknZWfgNCJlxg8Z/J32nejYzmp1PL3SuMFBDUK5tYUC9tZvrJ6jKUcKR+F+v/jN6VXE1Y5oxTRjKNKLs2wRRxfMHeXzhrTxfM/UvnCThOpI/hHbzv8S90ljRRVXyk5rADVtOs3PuB8JUqmJjJRlFb8bgo0pJtN7FGExn4bdqec5qeKO2m/annJ68JB+H4w/+pRzPGbr4j9KI/wAXZSYmrWprmdCo6bbeTljOHxlRyQisxHIDr7JotO0VxGHWoCEI9sZjq2WsbDlvqtM9oVxRc1GBOqwA8b9gmtKUpwbS3RMoxjJK+w87YnZkfsJ+UZc1uY/cbymkw2mKTkLrU8l9nbJ1QAAkkAAXJJsLDlvMJV5xeWS3NI04SV0zEM1XmP3G8o2atUfdfuNNBiNM0dYGY9IHnGsPjUc2Um+46j1b5Uq1WMczjsSoRbsmURr1eVX7jR+ljCPtK/cPzl/lihN+4/CZrHvop0PJCw9YMoZdYOySBIGiV9gnkLuR7sxk8CetB3imcMuRJ0S06USX8OAIYgMbqjVKjg+P4AHNd17HaXNTZKjQH2Ki82vUHaQ3znmepr/DfydWFf1EPhe9qAHOdR2Kx+UyQpvT4uqVIBIdDvyG/wAQJpuGz+xTXe7HsUD+6Maaof8AocOw+6Ev7nTztIwcslGC/U2iqqzTb6RsmsfaGw+0Pc2seBEzfDR7UkXe9+6p8xLbQFfPhqT8oTIfehKfBRKDhy+ukvQ7dpUD4GcGHp2xdumzepK9K/Zn6Qek9OoykC6upP3gCDceHbPTSBybOT3ckyfCrDWw+HPMVU7UU/FJo9EVs9Ck+9FB96jKfFTNvUJatJVOm0RQjlbj9mVPDJ7UAvOdfAMfkJjgjpkqFSASGQkfaykG4mn4c1P9JPzsf0gfOJwnw9sNhv5VRe2mD8RN8HLTowj+q5FWOabfSRq9R1jYbHqIvEqUgyspFwQRq27OTpkXQdXPh6TcuQA+9fZ+UsNmu154dROFVrpnbF5opmPqKWRCx9lBlS+prA5dYA6LjotJuBRjUpU3N1VXdcusHaoznl2HskjFaHR2zioVawGtb+yo2MNhsN1pK0bo9aWpXZhutynUWJ8gJ6lXE03RypfV9jnjSqKo5N7dFfwwX+B/5E+DSNwV0ZTqUmZkV2zlRcXNgqnV2yw4XUmaiAqljnU2UEm1mGwe8TO6P0biXU00zoh1sGZkUm3N2nstKwuV4TK5W35JqXVW6V9jVDQNHbxK23gSZicIlQBWUEC2r3bLTBYevWwlUgEqykZlB9lhqNjvBB8Z6IXuAw5QD2znxdGVFRkpNp8F0pqV1axW4nRuFpoXdLAe/adgA5Sd0zVDCmtUIprlBNwL3CL0mSdKtWqOxZHyoxCAKxUAH7WoayRrvJGgtMCmeLZBYn7evMD07xPRoRnGk5KV5W74MKji52ash7hFS4unSp31A6zsGpGtfrtGND6MSqjO1yL2FjYeE17KGAJ1yLj8QlJGc6gOQcp5AOmccMTNQ048t8+5s6cb5nwYXSFAU3dAbhdh94B7ReWGn67CmlMnW2s+5QPmQeqRMNSatU17WbM3QL3Pl2SVwpSzp+Vvis9BtOrTi92luc62jJrhkXRmihURnYkDYLW6z2yrW6OLHWr27Gsfrpmm4P114vJcXGYkdBNwfdM7hxnqrb7zg9rXMqFSUpVFLhCailFx5NaVjdY2RjuUmSCJC0k+WlUP8h8Z40d5peTtlwQ9DJainSL9uv5yWwg4BLU0H8oHYBDafTR2ijy3yNWnTrzpRJfiGI2I4IAI4lNoU2fELurX7yIZdNKXR2rEYld5pN+gj5Th9RV6DOjDP60UvDl/bpLuVz2kD+2QMTp8vhxhiiiyoufMb2S1tWy+oSTwyVmrLZWsEABAJuSzbPCa0YNDTCFF+xl2Dm2nJGvCjRp5lf8Ao2cJSnKzsVPAevei9PmPfqdfNDKnhs966rzaa9pZz5Rzga5Su9Mi2ZCD0MjDb+rtkbT5z40qeeiWPKLL5mVGKWMc/a1xNt0lHzYPS3CIV6K0uKykFSWz5h7ItqXLq7ZoOBlbNh8vMdh1NZh4lpM0houk1N1VEBKNlsouDb2SOu0oOAtf26lPequP6TY//aZVJ06+GmoK1ncqMZQqK7vcjcNKl64Xmoo6yWPzEXS/CFa9EUhTKsCpzZwQMo5BljOlbVMcUOw1ES3QMqn4GarSOh6PFPlpoDkbKQoBBAJFuuaOrSpQpxkruyt4JySlKTTI/Aurmw5XmOw6mAYeJM0Ux3ASt7VWnvVX7pI/uE2M8r1CFq787nRRf0IDjB8fC9/h4jeI4hv9fX0JGdSSOSzXvY7Po7PKSaZndisFQpYdVItt7e/ZhSxE5VMsltuBXxCIMzsqjZdjYXPIN5g0aiuodGVlJsCpuLjaOiUvDKmWoAgXyuGPQLMCfETO6K0+9BDTVEYZiwLZtRIsdhF9gnPQwWtRzRe9/wBjadbLKz4B4Sm+JqW3qP0LN3UxCU1TO6oLAXY2ubbJg9GUXxGIDHWS+dzbUBe592ywE0XDFSVRuQObnddbC/X8Z14inCTp0JPjkxptpSmjTU6ismZWDKRtXWJhNKgekOFH3h2lFJ8byVo/T5pU+LyBrXsSxA1m+sW17ZE0bSetXBPtEvnc8m259w5JrRwzw8pSfCWwp1VUSS5N0rWUE8g+UxumdImu4VNaA2QD7xOrN5de+T+E+MbMKI1LlDN/NckBT0ate+V2isYlJi7IWb7pBGocurfFhMO1HWtd+y/sdWon9PHZfaI0bxSXb7ba26Nw6oGmdGccoscrKbg2uNe0GDT4Qo7BAjAsQLki2syRpbHrSTMdbHUq7z5b5zSjWjWTfL4NIuDhtwZfE0/RkanmBdxbV9xOXrP1si8H8CWbjD9lbgdLWIPZrkbC4d8RU1kkk3Ztw+W4Dymxp0AihFFgBYTqxNV04ZL3k+WY04KUr+y4GCkrNPf6LDeVXtIl7xcpNPjVTTnVF7BrnDQjeovubzdoskpTsgjLSzpoLSBiEsZ9GuDzWVWIq2Yj3fCLIeKoFnYjfbs1fKdHcLG0vDWNA64YMYWDtKPEh6Fdq4RnR0VXCa3UoSVYLyixl4IrLeZ1KcZxcZcMqMnF3RSjT1P8Ov8A7Y/dDHCClzK4/wDCfkZacQu4TvRl3DsnA/TaXX8m6xEisXT2H3VAf/hfyheu8MTf277zRf45ZZeiJzR2RRgk5ok/LqXn8j+If/IgevsNz2HvpuP7YCaZwam4dVJ2nI4Pbllp6EnNEL0FObJ+WU/P5H8Qyo9cYLNn4ynm52U37cse9fYX8dPHylj6CnNner05sT9Mpvlv8jWIZVUNKYJCWSpRUnaV1E9dpIXTmG/HTvSaNHJzRF9V0+YIpemQfLf5H8QyGNM4b8dO8IS6Yw34yd8ST6opcwdkT1PR5i9gk/K4dv8AIfEDB0nhz/3qffXzkJ6OAc3PEE/mTzlkdC0eYvdHlBOgqH4ad1fKVH01Q/1k1+4PEX5SG8PWw6DKj0lG5XQDsBh1KtJwVZ6ZB2guhB6NsH1BQ/DTur5TvUFD8NO6vlJfpabu5O4fEvpEX1VhDzB0B7DsBtLTApQpCyFFHQw1neTyyMOD9DmL3R5Tv+naHMHYJr8C3s5N/diVZLhITHaPw9V87sM2y4fLq1m2o9J7ZGbQOG5x/wBw+ckNweo8wQG4O0ub8ZccJKKspNfuS6yb3SG6OhaCMHUkkG4u5I7IektGU6xDNckCwysR7/hAbg7T5viY23BxN3ifOJ4STlfM79hrK1rIcwmCSkCqKRfWSTcnrkjNbbK5uDibvFvONNwdTd+o+cl4C7u5NsevZWsWr1V3iUWlXD16SCxy5mYbtQAvuhVNA093ifOO4XRyU/sgX38vaZrSwWSSlcmVbNG1icpGq8Soikcn0I00j4lrKx3AnwnoHORMKt1B3kntJM6M00Nh7h8J0gVzSw1iLrjiLNBiLHAYmWGEMAOEJYISEEksYQhQQIQEQBCKIgEUQAW8IQbRVgMMRRBiiIApwnThGB06dOgB04RJ0QDiGOxhQYVj9GADptBMbIP0YJDfRjAI2gNAYH6MFs2/xEBHMI09oL5t47RGWVvoiACMixDltyRtwfoiMMD0dojEPO69HhK/SrDi2ta5so/qIHzjzqfoiQcaD7IPK48AW+QiYD9OqgAHyiSJxLfRE6GwFrTq2kqliBKwGOI0dwsXC1wY4tQb5UK8cDwuFi3DgzgRKxXO+EHO+O4WLQWhqBKtap3wxWO+LMFi0VB9GLk6JWCuY4K5hmQWJ+ToiFOiRBiDCGIMLodmSQs7LI4rxRXiugHwsICMCvFFePYB7LOyRrj53Hw2Dccyzgsb4+Lx8Nhbj4PujiDoHjIvpA3eMX0sbjGnH3E0yQVnFB0/XVI5xg3GJ6aN0q8BWkPZB9GAyLu8YycaN0Q40c2PNDoLSEegsbekOntM58YN0ZbGjdE5QC0hmoo6ZGcR98UN0jvWG6S2h7gO53yDjASUJPK3ip8pLesvTIONrj2LXvnvboAN/jFsG4HFzovHDd4mdFsOzHQY6rSKKkcR4hkgNHA0jhooeAEoPDV5U4zSISwtdiL22DrJlLiNKu/PI3IrBettp6rSlFsTkka18Ug2uo6xHadUEXBBHQbzBJpAre6lFG9Laz1SRh8a4zBWYX9pSpAUkjbbLr17iNsbh0xKXZuQ8MPMSmkq+Q3ds9rj7NhuBW1zy8seoaYfUrMxe1zZkUfqX5xabHnRsg0MPMSeENiVLuDe33GHgNcuNF6VLkIxDXBsQMpBG0EbOv37InFpXGmmX+aFmkdGh5pA7D4admjQaLABy87NABnXgA5eJmgXnXgAZaCTBvEvAAiYhaCWgkwAImATEzQCYAc3TG2MImNsYANsYwxjrRljAQ00gVjd/wAq+LH/AAJPaQE1lm3k9g1D4QAK86Lq6YkAKhNMLuaPpphN57DKrE4M03NNto8RyGNikJnnZ6UcLCSujQJphD974x9NKJzx2zNLShCnHqD+BXZfYniKts5BI2Wa233Hoja6NoHYx78pOIiilFqtCfp67LfE6CpuLK7DXfWSw7LwaOgLADjTYbAB5kyrFMiEqNvPbHrMXy7z/Bbrwesbiqe7/mInBwgk8dt/l1+BlYrPzm7xhiq/PfvNDWYfLX3/AAWTcHL68yX35Gv7/t2ljonRApNnZ852DVYD/MzwxNTnv3j5xfTKvPfvGDrXVgXpsvZo3QqCGKgmX0NincsrMW2EXPb8pbqWlKV1c5KtN05OMixFSOq8rVYw8xjuZlgHi55CDmLnMdxE3POvIfGGdxhhcCXniF5FLmJnMYiUXg5pFLmCXMVwJReAXkcuYDOYXGSGeNs8ZLmNmoYgHneMs8bLmNs0AOxL+ybbeT3mRbWE6o5PVGnvFcAs06M650YFMftGFadOmb5O2BzQlnTpmz0KXAc5Z06B0IWLOnSTRCiLOnQGdEMWdAZaaA+2fyn4iaGdOm8P9TwMf/7P7IJYU6dLORBckWdOgSJFnToAIYgnTpQAiIZ06SAEFp06NgCY00WdEA2YDTp0QEJIjRZ0AGp06dAD/9k=">
+							<br>
+							<button onclick="scanCarPlates()" class="btn btn-primary">SCAN</button>
+							<button onclick="openGateTemporarily()" class="btn btn-secondary" style="margin-left: 10px">OPEN GATE</button>
+						</p>
+					</div>
+				</div>
+			</div>
+		</section>
+
+			<footer class="ftco-footer ftco-section">
+				<div class="container">
+					<div class="row mb-5">
+						<div class="col-md">
+
+						
+
+							<div class="ftco-footer-widget mb-4">
+								<h2 class="ftco-heading-2 logo">AutoGate</h2>
+								<p>Automated TollGate Payment System</p>
+							</div>
+						</div>
+						<div class="col-md">
+							<div class="ftco-footer-widget mb-4 ml-md-5">
+								<h2 class="ftco-heading-2">Team Members</h2>
+								<ul class="list-unstyled">
+									<li class="py-2 d-block">Clayton Sibanda</li>
+									<li class="py-2 d-block">Denzel Chiuseni</li>
+									<li class="py-2 d-block">Shabour Banda</li>
+								</ul>
+							</div>
+						</div>
+						<div class="col-md">
+							 <div class="ftco-footer-widget mb-4">
+								<h2 class="ftco-heading-2">Links</h2>
+								<ul class="list-unstyled">
+									<li><a href="#top" class="py-2 d-block">Home</a></li>
+									<li><a href="#services" class="py-2 d-block">Services</a></li>
+									<li><a href="#about" class="py-2 d-block">About</a></li>
+									<li><a href="{{url_for('signin')}}" class="py-2 d-block">Sign In</a></li>
+
+								</ul>
+							</div>
+						</div>
+						<div class="col-md">
+							<div class="ftco-footer-widget mb-4">
+								<h2 class="ftco-heading-2">Have a Question?</h2>
+								<div class="block-23 mb-3">
+									<ul>
+										<li><span class="icon icon-map-marker"></span><span class="text">Harare Institute of Technology</span></li>
+										<li><a href="tel: +263776433583"><span class="icon icon-phone"></span><span class="text">+263776433583</span></a></li>
+										<li><a href="mailto: autogateapp@gmail.com"><span class="icon icon-envelope"></span><span class="text">autogateapp@gmail.com</span></a></li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12 text-center">
+							<!-- loader -->
+						<div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/></svg></div>
+					</div>
+				</div>
+			</footer>
+
+			<script src="../static/js/jquery.min.js"></script>
+			<script src="../static/js/jquery-migrate-3.0.1.min.js"></script>
+			<script src="../static/js/popper.min.js"></script>
+			<script src="../static/js/bootstrap.min.js"></script>
+			<script src="../static/js/jquery.easing.1.3.js"></script>
+			<script src="../static/js/jquery.waypoints.min.js"></script>
+			<script src="../static/js/jquery.stellar.min.js"></script>
+			<script src="../static/js/owl.carousel.min.js"></script>
+			<script src="../static/js/jquery.magnific-popup.min.js"></script>
+			<script src="../static/js/aos.js"></script>
+			<script src="../static/js/jquery.animateNumber.min.js"></script>
+			<script src="../static/js/scrollax.min.js"></script>
+			<script src="../static/js/socket.io-4.1.0.js"></script>
+			<script src="../static/js/main.js"></script>
+
+	</body>

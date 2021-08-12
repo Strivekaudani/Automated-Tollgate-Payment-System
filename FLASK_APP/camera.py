@@ -53,3 +53,4 @@ class Camera(object):
                     break
                     
         cls.thread = None
+

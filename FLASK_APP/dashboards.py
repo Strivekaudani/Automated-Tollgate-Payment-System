@@ -46,20 +46,12 @@ def admin_dashboard(request, response):
 	## getting dpayments
 	db = request.db;
 
-	payments = list(db.payments.find({}));
-	projection = { "name": 1, "surname": 1 }
+	transactions = list(db.transactions.find({}));
 
-	for payment in payments:
+	for transaction in transactions:
+		transaction["time"] = date_from_timestamp(transaction["time"])
 
-		# getting user name
-		email = payment['email'];
-		query = { 'email': email }
-		depositer = db.users.find_one(query, projection);
-
-		payment["depositer"] = depositer;
-		payment["time"] = date_from_timestamp(payment["time"])
-
-	body = render_template('admin-dashboard.html', payments=payments, payments_count=len(payments));
+	body = render_template('admin-dashboard.html', transactions=transactions, transaction_count=len(transactions));
 	response.set_body(body)
 
 	return response.render();

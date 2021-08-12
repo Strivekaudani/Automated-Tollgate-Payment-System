@@ -176,7 +176,6 @@ async function scanCarPlates() {
 	
 // })()
 
-
 (function($) {
 
 	"use strict";

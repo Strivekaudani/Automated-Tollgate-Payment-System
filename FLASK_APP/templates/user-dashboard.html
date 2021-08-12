@@ -68,8 +68,12 @@
 	<div style="--my-width: 600px; width: var(--my-width); margin-left: calc((var(--window-width) - var(--my-width)) / 2)">
 		{% for car in cars %}
 			<div data-number-plate="{{ car['number_plate'] }}" class="row" style="margin-top: 5px;">
-				<span style="background: green; color: white; padding: 5px; font-size: 20px;text-align: center;" class="col-sm-8">
+				<span style="background: green; color: white; padding: 5px; font-size: 20px;text-align: center;" class="col-sm-4">
 					{{car["number_plate"]}}
+				</span>
+
+				<span class="col-sm-4">
+					{{ (car.get("car_type") or 'NOT_SPECIFIED').upper() }}
 				</span>
 				
 				{% if car["car_license_paid"]: %}
@@ -92,7 +96,12 @@
 		{% endfor %}
 
 		<form class="row" method="POST" action="/add-car" style="margin-top: 20px;">
-			<input type="text" name="number_plate" placeholder="NEW CAR NUMBER PLATE" class="col-sm-8">
+			<input type="text" name="number_plate" placeholder="NEW CAR NUMBER PLATE" class="col-sm-4">
+			<select name="car_type" class="col-sm-4">
+				<option value="" selected disabled>SELECT CAR TYPE</option>
+				<option value="family_car">FAMILY CAR</option>
+				<option value="heavy_vehicle">HEAVY VEHICLE</option>
+			</select>
 			<span class="col-sm-4">
 				<input type="submit" value="ADD CAR" class="btn btn-secondary" style="width: 100%;">
 			</span>
@@ -120,14 +129,9 @@
 			<div class="col-md-10 ftco-animate">
 				<form action="/add-funds" class="appointment-form" method="post">
 					<div class="row">
-						<div class="col-sm-4">
+						<div class="col-sm-8">
 							<div class="form-group">
 								<input type="number" class="form-control" name="amount" placeholder="Amount" required>
-							</div>
-						</div>
-						<div class="col-sm-4">
-							<div class="form-group">
-								<input type="text" class="form-control" name="verification_code" placeholder="Verification Code" required>
 							</div>
 						</div>
 						<div class="col-sm-4" style="padding-top: 0 !important;">

@@ -2,15 +2,18 @@
 from flask import render_template
 from passlib.hash import sha256_crypt
 from utils import uuid
+from flask_mail import Message;
 
-def create_account(request, response):
+
+def create_account(request, response, mail):
 	
 	name = request.form.get("name")
 	surname = request.form.get("surname")
 	email = request.form.get("email").lower()
 	password = request.form.get("password")
 	confirm = request.form.get("confirm")
-	car_plate = request.form.get("car_plate").upper(); 
+	car_plate = request.form.get("car_plate").upper();
+	car_type = request.form.get('car_type');
 
 	secure_password = sha256_crypt.encrypt(str(password))
 
@@ -42,11 +45,21 @@ def create_account(request, response):
 		"cars": [
 			{
 				"number_plate": car_plate,
-				"car_license_paid": False
+				"car_license_paid": False,
+				"car_type": car_type
 			},
 		]
 	}
 
 	db.users.insert_one(data);
-	
+
+	try:
+
+		email_message = Message('Welcome', sender="Autogate <autogate@gmail.com>", recipients=[ email ]) 
+		email_message.body = f'Thank you for creating an account with us. Proceed to sign in.';
+		mail.send(email_message);
+
+	except:
+		pass
+
 	return response.redirect_302('/signin')

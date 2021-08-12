@@ -4,30 +4,130 @@
 {% block title %}Scan Vehicle Plates{% endblock %}
 
 {% block links %}
-  <li class="nav-item"><a href="/" class="nav-link">HOME</a></li>
-  <li class="nav-item active"><a href="/scan" class="nav-link">scan</a></li>
-  <li class="nav-item"><a href="/admin-dashboard" class="nav-link">ADMIN DASHBOARD</a></li>
-  <li class="nav-item"><a href="/logout" class="nav-link">logout</a></li>
+	<li class="nav-item"><a href="/" class="nav-link">HOME</a></li>
+	<li class="nav-item active"><a href="/scan" class="nav-link">scan</a></li>
+	<li class="nav-item"><a href="/admin-dashboard" class="nav-link">ADMIN DASHBOARD</a></li>
+	<li class="nav-item"><a href="/logout" class="nav-link">logout</a></li>
 {% endblock %}
 
 
 {% block body %}
 
 <section class="services-section ftco-section">
-  <div class="container">
-  	<div class="row justify-content-center pb-3">
-      <div class="col-md-10 heading-section text-center ftco-animate">
-      	<span class="subheading">Dashboard</span>
-        <h2 class="mb-4">Scan Number Plate</h2>
-        <p>
-          <img src="/video-feed">
-          <br>
-          <button onclick="scanCarPlates()" class="btn btn-primary">SCAN</button>
-          <button onclick="openGateTemporarily()" class="btn btn-secondary" style="margin-left: 10px">OPEN GATE</button>
-        </p>
+	<div class="container">
+		<div class="row justify-content-center pb-3">
+			<div class="col-md-10 heading-section text-center ftco-animate">
+				<span class="subheading">Dashboard</span>
+				<h2 class="mb-4">Scan Number Plate</h2>
+				<p>
+					<img src="/video-feed" style="width: 300px;">
+					<br>
+					<button onclick="scanCarPlates()" class="btn btn-primary">SCAN</button>
+					<button onclick="openGateTemporarily()" class="btn btn-secondary" style="margin-left: 10px">OPEN GATE</button>
+				</p>
+			</div>
+		</div>
+	</div>
+</section>
+
+<div class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <select id="sel-car-type" onchange="onSeleCarTypeChange(this.value)">
+        	<option value="" selected disabled>SELECT CAR TYPE</option>
+        	<option value="family_car">FAMILY CAR</option>
+        	<option value="heavy_vehicle">HEAVY VEHICLE</option>
+        </select>
+
+        <h4>TOLL FEE: <span id="span-toll-fee">(SELECT CAR TYPE)</span></h4>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" onclick="submitPayment()">OPEN GATE</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">CLOSE</button>
       </div>
     </div>
   </div>
-</section>
+</div>
+
+<script type="text/javascript">
+
+	async function submitPayment() {
+
+		if (!window.toll_fee)
+			return alert('Select car type');
+
+		try {
+			await axios.post(`/api/open-gate-command?number_plate=${window.unrecognized_number_plate}&amount=${window.toll_fee}`);
+
+			window.toll_fee = undefined;
+			document.getElementById('span-toll-fee').innerHTML = ``;
+			document.getElementById('sel-car-type').value = '';
+
+			$('.modal').modal('hide');
+
+		} catch (err) {
+			const error_msg = getRequestErrorMessage(err);
+			alert(error_msg);
+		}
+
+	}
+
+
+	function onSeleCarTypeChange(value) {
+
+		if (value === 'family_car')
+			window.toll_fee = 1;
+		else
+			window.toll_fee = 5;
+
+		document.getElementById('span-toll-fee').innerHTML = `$${window.toll_fee.toFixed(2)}`;
+
+	}
+
+
+	function sleep(millis) {
+		return new Promise(resolve => {
+			setTimeout(resolve, millis)
+		});
+	}
+
+	function socket_io() {
+
+		const socket = io('/scan');
+
+		socket.on('notice', function(message) {
+			alert(message);
+		});
+
+		socket.on('unrecognized_number_plate', function(number_plate) {
+			window.unrecognized_number_plate = number_plate;
+			$('.modal').modal('show');
+		});
+	}
+
+
+	(async() => {
+
+		while (window.io === undefined) {
+			await sleep(1000);
+		}
+
+		socket_io();
+
+		$('.modal').modal({
+			show: false,
+			keyboard: false,
+			backdrop: 'static'
+		})
+
+	})()
+</script>
 
 {% endblock %}

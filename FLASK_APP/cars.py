@@ -63,12 +63,14 @@ def add_car(request, response):
 		return response.redirect_302('/notice?message=You need to login in to do this operation');
 
 	# add car
-	number_plate = request.form.get('number_plate').upper()
+	number_plate = request.form.get('number_plate').upper();
+	car_type = request.form.get('car_type');
 	email = user["email"];
 
 	car = {
 		"number_plate": number_plate,
-		"car_license_paid": False
+		"car_license_paid": False,
+		"car_type": car_type
 	}
 
 	update = {

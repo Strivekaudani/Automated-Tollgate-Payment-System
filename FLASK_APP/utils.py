@@ -5,6 +5,7 @@ import datetime
 from uuid import uuid4
 from flask import make_response
 import json
+import socket
 
 # from PIL import Image
 import pytesseract
@@ -12,6 +13,19 @@ import cv2
 # import numpy as np
 
 AUTH_COOKIE_DURATION = 30 * 60;
+
+def get_ip_as_seen_by(remote_ip):
+
+	try:
+		s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM);
+		s.connect((remote_ip, 1));
+		IP = s.getsockname()[0];
+	except Exception as e:
+		print(str(e))
+		IP = '127.0.0.1';
+	finally:
+		s.close();
+		return IP;
 
 def text_from_image(image):
 

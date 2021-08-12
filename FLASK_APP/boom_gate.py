@@ -1,5 +1,9 @@
 
-import pigpio
+try:
+	import pigpio
+except:
+	import fake_pigpio as pigpio
+	
 from time import sleep
 
 pi = pigpio.pi()
@@ -26,7 +30,7 @@ def open_gate_handler(request, response):
 	user = request.user;
 
 	if (user == None):
-		response.set_json_body('You are need to login to open the gate');
+		response.set_json_body('You need to login to open the gate');
 		response.status = 401;
 		return response.render();
 
@@ -36,6 +40,23 @@ def open_gate_handler(request, response):
 		response.set_json_body('You are not authorized to open the gate');
 		response.status = 403
 		return response.render();
+
+
+	# record transaction
+
+	if (request.args.get('amount')):
+		amount = float(request.args.get('amount'))
+		number_plate = request.args.get('number_plate') or '<no_number_plate>';
+
+		db = request.db;
+
+		db.transactions.insert_one({
+			'type': 'TOLL_FEE_PAYMENT',
+			'amount': amount,
+			'done_by': f'MANUAL_PAYMENT',
+			'time': now(),
+			'notes': f'Car {number_plate} paid a toll fee of ${fee}'
+		});
 
 	# open the gate
 	open_and_close();

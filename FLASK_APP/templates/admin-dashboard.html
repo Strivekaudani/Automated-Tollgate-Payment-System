@@ -30,37 +30,28 @@
 
 <section class="ftco-section center-align" style="padding: 30px;">
 
-      <h2>PAYMENTS</h2>
+      <h2>TRANSACTIONS</h2>
     <table class="table table-striped">
 
     		<thead>
     			<tr>
-    				<th>DEPOSITER</th>
+    				<th>TYPE</th>
     				<th>AMOUNT</th>
     				<th>TIME</th>
-            <th>VERIFICATION CODE</th>
-    				<th></th>
+            <th>DONE BY</th>
+            <th>NOTES</th>
     			</tr>
     		</thead>
 
     		<tbody>
-       {% for payment in payments %}
+       {% for transaction in transactions %}
          
        	<tr>
-       		<td>{{ payment["depositer"]["name"] }} {{ payment["depositer"]["surname"] }}</td>
-       		<td>{{ payment["amount"] }}</td>
-       		<td>{{ payment["time"] }}</td>
-          <td>{{ payment["verification_code"] }}</td>
-       		<td>
-       			<form action="/approve-payment" method="POST" style="display: inline;">
-       				<input type="hidden" name="payment_id" value="{{ payment['_id'] }}">
-       				<input type="submit" value="APPROVE" class="btn btn-primary">
-       			</form>
-       			<form action="/remove-payment" method="POST" style="display: inline;">
-       				<input type="hidden" name="payment_id" value="{{ payment['_id'] }}">
-       				<input type="submit" value="REMOVE" class="btn btn-secondary">
-       			</form>
-       		</td>
+       		<td>{{ transaction["type"] }}</td>
+       		<td>{{ transaction["amount"] }}</td>
+       		<td>{{ transaction["time"] }}</td>
+          <td>{{ transaction["done_by"] }}</td>
+          <td>{{ transaction["notes"] }}</td>
        	</tr>
 
        {% endfor %}
@@ -70,8 +61,8 @@
     </tbody>
   </table>
 
-  {% if payments_count == 0 %}
-    <span style="color: grey; font-size: 30px;">NO PAYMENTS</span>
+  {% if transaction_count == 0 %}
+    <span style="color: grey; font-size: 30px;">NO TRANSACTIONS</span>
   {% endif %}
 </section>
 
