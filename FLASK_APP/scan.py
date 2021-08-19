@@ -11,6 +11,7 @@ from os import system
 from boom_gate import open_and_close
 from utils import text_from_image, uuid, now
 import constants
+# from persistents import persistent_vc
 
 module = {};
 module['prev_plate'] = '';
@@ -27,9 +28,10 @@ def check_car_type(cars, number_plate):
 
 	car_type = None;
 
+
 	for car in cars:
-		if (car['number_plate'] == number_plate):
-			car_type = car['car_type'];
+		if (car.get('number_plate') == number_plate):
+			car_type = car.get('car_type');
 			break;
 
 	return car_type;
@@ -41,10 +43,6 @@ def auto_scan(request, response, emit, mail, Message):
 
 		vc = cv2.VideoCapture('http://localhost:5000/video-feed');
 
-		if (not vc.isOpened()):
-			vc = cv2.VideoCapture('http://localhost:5000/video-feed');
-
-
 		while (True):
 			ret, frame = vc.read();
 
@@ -52,7 +50,7 @@ def auto_scan(request, response, emit, mail, Message):
 				image = np.array(frame)
 				break
 
-		text = text_from_image(image);
+		text = text_from_image(image)
 
 		if (len(text) == 0):
 			response.set_json_body({
@@ -156,7 +154,6 @@ def auto_scan(request, response, emit, mail, Message):
 
 def scan_plates(request, response):
 
-
 	# authentication;
 	user = request.user;
 
@@ -242,127 +239,6 @@ def scan_plates(request, response):
 		response.set_json_body("Something went wrong. Please try again.");
 		response.status = 500;
 		return response.render();
-
-
-# class CameraStreamer(Thread):
-
-# 	def __init__(self, textDetector):
-# 		Thread.__init__(self);
-# 		self.textDetector = textDetector
-# 		self.exit = False;
-
-# 	def run(self):
-
-# 		vc = cv2.VideoCapture("http://localhost:5000/video-feed");
-
-# 		while True:
-
-# 			if (self.exit):
-# 				return;
-
-# 			rval, frame = vc.read()
-# 			if (rval):
-# 				print("FRAME CAPTURED");
-# 				image = np.array(frame);
-# 				self.textDetector.image = np.array(frame);
-
-
-# class TextDetector(Thread):
-
-# 	def __init__(self, emit):
-# 		Thread.__init__(self);
-# 		self.emit = emit
-# 		self.prev_plate = '';
-# 		self.exit = False;
-# 		self.vc = cv2.VideoCapture('http://localhost:5000/video-feed');
-
-# 	def run(self):
-
-# 		while (not self.vc.isOpened()):
-# 			self.vc = cv2.VideoCapture('http://localhost:5000:/video-feed');
-
-# 		while (True):
-
-# 			if (self.exit):
-# 				print("TEXT DETECTOR STOPPED")
-# 				return;
-
-# 			sleep(0.1);
-
-# 			rval, frame = self.vc.read()
-# 			if (not rval):
-# 				continue
-
-# 			print("FRAME CAPTURED");
-# 			image = np.array(frame);
-
-# 			text = text_from_image(image);
-# 			cv2.imwrite('capture.png', image);
-# 			print("Image written to disk");
-
-
-# 			if (text != ''):
-
-# 				print("===============================================================")
-# 				print("DETECTED TEXT: " + text);
-# 				print("===============================================================")
-
-# 				if (self.prev_plate == text):
-# 					continue;
-
-# 				rval = open_gate_for_car(text, self.emit);
-
-# 				if (rval):
-# 					self.prev_plate = text;
-
-# 	def stop(self):
-# 		self.exit = True;
 				
 
 
-# def open_gate_for_car(number_plate, emit):
-
-# 	print("here")
-
-# 	try:
-
-# 	   # querying the database
-# 		db = request.db;
-# 		query = { "cars.number_plate": number_plate }
-# 		projection = { "funds": 1, "email": 1 }
-
-# 		user = db.users.find_one(query, projection);
-
-# 		if (user == None):
-# 			emit('notice', 'Car not recognized');
-# 			return True
-
-# 		# checking funds
-# 		funds = user["funds"];
-
-# 		fee = BOOM_GATE_FEE
-
-# 		if (funds < BOOM_GATE_FEE):
-# 			emit('notice', 'The driver\'s account has insufficient funds. We have added a debit on their account, and added a penalty of 10%');
-# 			fee = BOOM_GATE_FEE * 1.1
-
-# 		# deduct account
-# 		funds = funds - fee;
-# 		update = {
-# 			"$set": {
-# 				"funds": funds
-# 			}
-# 		}
-
-# 		email = user["email"]
-# 		query = { "email": email }
-
-# 		db.users.update(query, update)
-
-# 		# open gate
-# 		open_and_close()
-# 		return True;
-
-# 	except Exception as e:
-# 		# emit('notice', { 'data': 'Something went wrong' })
-# 		return False;

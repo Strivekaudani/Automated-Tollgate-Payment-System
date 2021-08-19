@@ -7,7 +7,7 @@ from subprocess import Popen
 from flask_mail import Mail, Message
 from utils import Response
 
-# from passlib.hash import sha256_crypt
+
 try:
     from camera import Camera
 except:
@@ -212,6 +212,7 @@ def _scan_plates():
 
 @app.route('/api/auto-scan-command', methods=[ 'POST' ])
 def _auto_scan():
+
     request.namespace = '/scan'
     response = Response(request)
     return auto_scan(request, response, emit, mail, Message);

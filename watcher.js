@@ -8,7 +8,7 @@ const FileWatcher = require('filewatcher');
 const child = require('child_process');
 const fs = require('fs');
 
-const PI_IP = '192.168.0.103'
+const PI_IP = '10.42.0.20';
 
 
 const fileWatcher = new FileWatcher();

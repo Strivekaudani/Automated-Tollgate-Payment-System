@@ -102,9 +102,9 @@
 
 		const socket = io('/scan');
 
-		socket.on('notice', function(message) {
-			alert(message);
-		});
+		// socket.on('notice', function(message) {
+		// 	alert(message);
+		// });
 
 		socket.on('unrecognized_number_plate', function(number_plate) {
 			window.unrecognized_number_plate = number_plate;

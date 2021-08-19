@@ -1,6 +1,7 @@
 
 import requests
 import os
+from time import sleep
 
 # os.system('clear')
 # print("AUTOGATE: autodetect started...")
@@ -10,6 +11,8 @@ class Global(object):
 	prev_plate = None
 
 glob = Global();
+
+sleep(5)
 
 while (True):
 
@@ -32,9 +35,6 @@ while (True):
 
 		# print(data.get('message'))
 
-
-	except KeyboardInterrupt as e:
-		break;
 	except Exception as e:
 		# print(str(e))
 		pass

@@ -32,8 +32,6 @@ def admin_dashboard(request, response):
 	# auth
 	user = request.user;
 
-	print (user)
-
 	if (user == None):
 		return response.redirect_302('/notice?message=You need to login to access this page.');
 

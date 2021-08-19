@@ -5,6 +5,7 @@ except:
 	import fake_pigpio as pigpio
 	
 from time import sleep
+from utils import now
 
 pi = pigpio.pi()
 SERVO = 17
@@ -55,7 +56,7 @@ def open_gate_handler(request, response):
 			'amount': amount,
 			'done_by': f'MANUAL_PAYMENT',
 			'time': now(),
-			'notes': f'Car {number_plate} paid a toll fee of ${fee}'
+			'notes': f'Car {number_plate} paid a toll fee of ${amount}'
 		});
 
 	# open the gate
